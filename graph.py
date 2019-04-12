@@ -1,16 +1,21 @@
 from collections import defaultdict
 
+
 class Graph(object):
     """
-    Class holding the data structure representing the game graph and implementing a few useful operations on that graph.
+    Class holding the data structure representing the game graph and
+    implementing a few useful operations on that graph.
     """
 
     def __init__(self):
         """
-        Graphs are represented by predecessors list (a dictionary whose keys are the nodes and values are a list of
-        successors of a nodes). Access in a dictionary is O(1) in average and O(n) in worst case because it uses a
-        hash table. Python lists provide O(1) retrieval. The same applies to successors list. Nodes are stored in a
-        dictionary where the key is the node id and the value is a tuple (player, priority).
+        Graphs are represented by successor and predecessor lists (e.g., for
+        the former, a dictionary whose keys are the nodes and values are a
+        list of successors of a nodes). Access in a dictionary is O(1) in
+        average and O(n) in worst case because it uses a hash table. Python
+        lists provide O(1) retrieval. The same applies to successor list.
+        Nodes are stored in a dictionary where the key is the node id and the
+        value is a tuple (player, priority).
         """
         self.predecessors = defaultdict(list)
         self.successors = defaultdict(list)
@@ -32,7 +37,7 @@ class Graph(object):
         """
         :return: returns the number of priority functions in the game
         """
-        return len(self.nodes[self.nodes.keys()[0]])-1
+        return len(self.nodes[self.nodes.keys()[0]]) - 1
 
     def get_node_player(self, node):
         """
@@ -44,7 +49,8 @@ class Graph(object):
     def get_node_priority(self, node):
         """
         :param node: a node id
-        :return: the priority of the node (or the first one in case of generalized parity)
+        :return: the priority of the node (or the first one in case of
+                 generalized parity)
         """
         return self.nodes[node][1]
 
@@ -60,7 +66,8 @@ class Graph(object):
     def add_node(self, node, info):
         """
         :param node: a node id
-        :param info: a tuple (player, priority) or (player, priority_1, ..., priority_k)
+        :param info: a tuple (player, priority) or (player, priority_1, ...,
+                     priority_k)
         """
         self.nodes[node] = info
 
@@ -95,7 +102,8 @@ class Graph(object):
 
     def subgame(self, set):
         """
-        Creates a sub-game from the current game. The sub-game will contain all nodes in the provided set.
+        Creates a sub-game from the current game. The sub-game will contain
+        all nodes in the provided set.
         :param set: the list of nodes that the sub-game will contain.
         :return: a sub-game.
         """
@@ -112,7 +120,9 @@ class Graph(object):
     def __str__(self):
         rep = ""
         for node in self.nodes:
-            rep += str(node) + " " + str(self.nodes[node]) + "\n" + str(node) + " -> "
+            rep += str(node) + " " +\
+                   str(self.nodes[node]) +\
+                   "\n" + str(node) + " -> "
             for succ in self.successors[node]:
                 rep += str(succ) + ", "
             rep += "\n"
