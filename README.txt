@@ -5,7 +5,7 @@ As a data structure to manipulate games symbollicaly, we use antichains.
 The antichain module is rather abstract but still imposes that following
 intuition:
 
-To represent downward-closed-sets of elements in a partially-ordered set, only
+To represent downward-closed sets of elements in a partially-ordered set, only
 maximal incomparable elements are stored.
 
 The user must provide a "comparator" function x, y -> bool which,
