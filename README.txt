@@ -18,3 +18,6 @@ We are using the Python unittest framework. To run the tests
 please call:
 
 python -m unittest discover
+
+or run checks.sh which also verifies the code conforms to PEP8 (a.k.a.
+pycodestyle) and pyflakes to catch some simple, local, errors.
