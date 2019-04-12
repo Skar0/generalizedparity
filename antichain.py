@@ -5,8 +5,9 @@ class Antichain(object):
 
     def __init__(self, comparator, intersector):
         """
-        An antichain is a collection of incomparable elements. These elements are stored in an internal list.
-        The size of the antichain is also recorded internally. Two functions allow for comparison between and
+        An antichain is a collection of incomparable elements. These elements
+        are stored in an internal list.  The size of the antichain is also
+        recorded internally. Two functions allow for comparison between and
         intersection of elements.
         :param comparator:
         :type comparator:
@@ -20,10 +21,11 @@ class Antichain(object):
 
     def insert(self, element):
         """
-        If element is incomparable to any element contained in the antichain, element is added to the antichain.
-        If there exists x in the antichain such that x > element (according to comparator), do nothing.
-        Otherwise, all x in the antichain such that element > x are removed from the antichain.
-        This method modifies the antichain.
+        If element is incomparable to any element contained in the antichain,
+        element is added to the antichain.  If there exists x in the antichain
+        such that x > element (according to comparator), do nothing.
+        Otherwise, all x in the antichain such that element > x are removed
+        from the antichain.  This method modifies the antichain.
         :param element:
         :type element:
         :return:
@@ -38,10 +40,12 @@ class Antichain(object):
             if self.comparator(element, s):
                 return self
 
-            # If element is not smaller than s, it is either incomparable to or bigger than s
-            # If incomparable, we add s. If bigger we don't. We therefore check if s < element.
-
-            # If element is not bigger than s or is incomparable, add s to result
+            # If element is not smaller than s, it is either incomparable to or
+            # bigger than s
+            # If incomparable, we add s. If bigger we don't. We therefore check
+            # if s < element.
+            # If element is not bigger than s or is incomparable, add s to
+            # result
             if not (self.comparator(s, element)):
                 resulting_incomparable_elements.append(s)
                 resulting_size += 1
@@ -56,8 +60,8 @@ class Antichain(object):
 
     def union(self, antichain):
         """
-        Computes the union of two antichains. The resulting antichain is returned.
-        This modifies the first antichain.
+        Computes the union of two antichains. The resulting antichain is
+        returned.  This modifies the first antichain.
         :param antichain:
         :type antichain:
         :return:
@@ -92,7 +96,8 @@ class Antichain(object):
         :return:
         """
 
-        # TODO should this not check actual inclusion w.r.t. the order on elements ?
+        # TODO should this not check actual inclusion w.r.t.
+        # the order on elements ?
 
         for i in self.incomparable_elements:
             if i == element:
