@@ -2,6 +2,7 @@ import copy
 
 from antichain import Antichain
 
+
 def intersector(x, y):
     """
     Intersection between two tuples of counters [c_1, c_3, ..., c_d] [c'_1, c'_3, ..., c'_d].
@@ -58,7 +59,7 @@ def intersector_generalized_0(x, y):
     else:
         nbr_functions = len(x)
         res = [x[0]]
-        for func in range(1,nbr_functions):
+        for func in range(1, nbr_functions):
             res.append(intersector(x[func], y[func]))
 
     return res
@@ -112,14 +113,14 @@ def down_generalized_0(element, priorities, node, nbr_functions, max_value):
     res = [node]
 
     # for each tuple of counters
-    for func in range(1, nbr_functions+1):
+    for func in range(1, nbr_functions + 1):
 
         # retrieve the position of the counter concerned by the encountered priority according to the right function
-        concerned_counter = (priorities[func-1] // 2)
+        concerned_counter = (priorities[func - 1] // 2)
 
-        if priorities[func-1] % 2 == 0:
+        if priorities[func - 1] % 2 == 0:
             # even priority resets the first few counters to the max value
-            succ = (concerned_counter)*[max_value] + element[func][concerned_counter:]
+            succ = (concerned_counter) * [max_value] + element[func][concerned_counter:]
         else:
             if element[func][concerned_counter] == 0:
                 # we can't decrement 0. Counter is in underflow, the result is the underflow value -1
@@ -150,9 +151,9 @@ def compute_counters_sizes_0(graph):
     graph_nodes = graph.get_nodes()
 
     # initialize the list holding the required number of counters per function
-    nbr_counters_per_function = [0]*nbr_functions
+    nbr_counters_per_function = [0] * nbr_functions
 
-    for func in range(1, nbr_functions+1):
+    for func in range(1, nbr_functions + 1):
         # first we find out the number of counters necessary by retrieving the maximum odd priority in the game
         maximum = -1
         for node in graph_nodes:
@@ -165,7 +166,7 @@ def compute_counters_sizes_0(graph):
 
         # get the number of counters and update the list of required number of counters
         nbr_counters = (maxOdd // 2) + 1
-        nbr_counters_per_function[func-1] = nbr_counters
+        nbr_counters_per_function[func - 1] = nbr_counters
 
     return nbr_functions, nbr_counters_per_function
 
@@ -195,22 +196,21 @@ def compute_fixpoint_0(graph, max_value):
     # every counter in every tuple has the maximal value
     for node in graph.get_nodes():
         temp = [node]
-        for func in range(0,nbr_functions):
-            temp.append(nbr_counters_per_function[func]*[max_value])
+        for func in range(0, nbr_functions):
+            temp.append(nbr_counters_per_function[func] * [max_value])
         start_antichain.insert(temp)
 
-
     if (toPrint):
-        print("Start antichain : "+str(start_antichain)+"\n")
+        print("Start antichain : " + str(start_antichain) + "\n")
 
     antichain1 = start_antichain
 
-    cpre1= Cpre(start_antichain, 1, graph, nbr_functions, max_value)
+    cpre1 = Cpre(start_antichain, 1, graph, nbr_functions, max_value)
 
     if (toPrint):
-        print("CPre_1 of start antichain: "+str(cpre1)+"\n")
+        print("CPre_1 of start antichain: " + str(cpre1) + "\n")
 
-    cpre0= Cpre(start_antichain, 0, graph, nbr_functions, max_value)
+    cpre0 = Cpre(start_antichain, 0, graph, nbr_functions, max_value)
 
     if (toPrint):
         print("CPre_0 of start antichain: " + str(cpre0) + "\n")
@@ -238,22 +238,22 @@ def compute_fixpoint_0(graph, max_value):
 
         cpre1 = Cpre(antichain1, 1, graph, nbr_functions, max_value)
         if (toPrint):
-            print("ITER "+str(nb_iter)+" CPre 1 of prev " + str(cpre1) + "\n")
+            print("ITER " + str(nb_iter) + " CPre 1 of prev " + str(cpre1) + "\n")
 
         cpre0 = Cpre(antichain1, 0, graph, nbr_functions, max_value)
 
         if (toPrint):
-            print("ITER "+str(nb_iter)+" CPre 0 of prev " + str(cpre0) + "\n")
+            print("ITER " + str(nb_iter) + " CPre 0 of prev " + str(cpre0) + "\n")
 
         temp = cpre0.union(cpre1)
 
         if (toPrint):
-            print("ITER "+str(nb_iter)+" Union of Pre 0 and Pre 1  " + str(temp) + "\n")
+            print("ITER " + str(nb_iter) + " Union of Pre 0 and Pre 1  " + str(temp) + "\n")
 
         antichain2 = antichain1.intersection(temp)
 
         if (toPrint):
-            print("ITER "+str(nb_iter)+" final set  " + str(antichain2) + "\n")
+            print("ITER " + str(nb_iter) + " final set  " + str(antichain2) + "\n")
 
     return antichain1
 
@@ -275,9 +275,10 @@ def Cpre(antichain, player, graph, nbr_functions, max_value):
     :rtype:
     """
     if player == 0:
-        return Cpre_0(antichain, graph,  nbr_functions, max_value)
+        return Cpre_0(antichain, graph, nbr_functions, max_value)
     else:
-        return Cpre_1(antichain, graph,  nbr_functions, max_value)
+        return Cpre_1(antichain, graph, nbr_functions, max_value)
+
 
 def Cpre_1(antichain, graph, nbr_functions, max_value):
     """
@@ -301,14 +302,14 @@ def Cpre_1(antichain, graph, nbr_functions, max_value):
     for node in graph.get_nodes():
         if graph.get_node_player(node) == 1:
             first_iteration = True
-            temp2 = Antichain(comparator_generalized_0, intersector_generalized_0) #contains the set for intersection
+            temp2 = Antichain(comparator_generalized_0, intersector_generalized_0)  # contains the set for intersection
             for succ in graph.get_successors(node):
                 temp1 = Antichain(comparator_generalized_0, intersector_generalized_0)
                 for element in antichain.incomparable_elements:
                     if element[0] == succ:
 
                         computed_down = down_generalized_0(element, graph.nodes[node][1:], node, nbr_functions, max_value)
-                        #print("Down = "+str(computed_down)+" Compute down of "+str(element)+" with prio "+str(graph.get_node_priority(node))+" node "+str(node)+" val max "+str(max_counter))
+                        # print("Down = "+str(computed_down)+" Compute down of "+str(element)+" with prio "+str(graph.get_node_priority(node))+" node "+str(node)+" val max "+str(max_counter))
 
                         if computed_down != -1:
                             temp1.insert(computed_down)
@@ -317,9 +318,9 @@ def Cpre_1(antichain, graph, nbr_functions, max_value):
                     temp2 = temp1
                     first_iteration = False
                 else:
-                    #print("temp1 "+str(temp1)+ " temp2 "+str(temp2))
+                    # print("temp1 "+str(temp1)+ " temp2 "+str(temp2))
                     temp2 = temp1.intersection(temp2)
-                    #print("inter  "+str(temp2))
+                    # print("inter  "+str(temp2))
 
             cur_antichain = cur_antichain.union(temp2)
 
@@ -346,14 +347,15 @@ def Cpre_0(antichain, graph, nbr_functions, max_value):
 
     cur_antichain = Antichain(comparator_generalized_0, intersector_generalized_0)
     for element in antichain.incomparable_elements:
-            for pred in graph.get_predecessors(element[0]):
-                if graph.get_node_player(pred) == 0:
-                    computed_down = down_generalized_0(element, graph.nodes[pred][1:], pred, nbr_functions,
-                                                       max_value)
-                    if computed_down != -1:
-                        cur_antichain.insert(computed_down)
+        for pred in graph.get_predecessors(element[0]):
+            if graph.get_node_player(pred) == 0:
+                computed_down = down_generalized_0(element, graph.nodes[pred][1:], pred, nbr_functions,
+                                                   max_value)
+                if computed_down != -1:
+                    cur_antichain.insert(computed_down)
 
     return cur_antichain
+
 
 """
 The same algorithm for player 2 is similar to the one for player 1. However we have shown that
@@ -401,14 +403,14 @@ def get_winning_regions_incremental(graph):
         if len(winning_region_0) + len(winning_region_1) == nbr_nodes or max_value == 100:
             completely_solved = True
 
-            #print("MAX VALUE "+str(max_value))
-            #print("winning 0 " + str(winning_region_0))
-            #print("winning 1 " + str(winning_region_1))
+            # print("MAX VALUE "+str(max_value))
+            # print("winning 0 " + str(winning_region_0))
+            # print("winning 1 " + str(winning_region_1))
 
         # if it is not, increment the maximal value
-        max_value+=1
-        #print("value "+str(max_value)+" current fixpoint 0 : "+ str( fixpoint_0))
-        #print("value "+str(max_value)+" current fixpoint 1 : "+ str( fixpoint_1))
+        max_value += 1
+        # print("value "+str(max_value)+" current fixpoint 0 : "+ str( fixpoint_0))
+        # print("value "+str(max_value)+" current fixpoint 1 : "+ str( fixpoint_1))
 
     return list(winning_region_0), list(winning_region_1)
 
@@ -417,6 +419,6 @@ import file_handler as io
 g = io.load_generalized_from_file("generalized_parity_game_example.txt")
 fixpoint = compute_fixpoint_0(g, 4)
 winning_region_0, winning_region_1 = get_winning_regions_incremental(g)
-print("Fixpoint : "+str(fixpoint))
-print("Winning region of player 0 : "+str(winning_region_0)+" Winning region of player 1 : "+str(winning_region_1))
+print("Fixpoint : " + str(fixpoint))
+print("Winning region of player 0 : " + str(winning_region_0) + " Winning region of player 1 : " + str(winning_region_1))
 # solution should be [1, 2] and [3,4,5]
