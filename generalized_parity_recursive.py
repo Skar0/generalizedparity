@@ -29,8 +29,12 @@ def disj_parity_win(g, maxValues, k, u):
     :param maxValues: the maximum value according to each priority function
     :param k: the number of priority functions
     :param u: integer for testing purposes
-    :return: W1, W2 the winning regions in the game for player 1 and player 2 (for the original game, without complement)
+    :return: W1, W2 the winning regions in the game for player 1 and player 2
+             (for the original game, without complement)
     """
+    # For the correctness argument to work, and for the base case too,
+    # we need the max value of each priority to be odd!
+    assert(all(m % 2 == 1 for m in maxValues))
 
     # Base case : all maxValues are 1 or the game is empty
     if all(value == 1 for value in maxValues) or len(g.nodes) == 0:
@@ -56,6 +60,10 @@ def disj_parity_win(g, maxValues, k, u):
             j += 1
             copy_maxValues = copy.copy(maxValues)
             copy_maxValues[i] -= 2
+            # a few sanity checks here
+            assert(copy_maxValues[i] >= 0)
+            assert(copy_maxValues[i] == maxValues[i] - 2)
+            # end of sanitu checks
             W1, W2 = disj_parity_win(H1, copy_maxValues, k, u + 1)
 
             if len(G1.nodes) == 0:
@@ -106,8 +114,6 @@ def generalized_parity_solver(g):
     return disj_parity_win(transformed, maxValues, nbrFunctions, 0)
 
 
-"""
 import file_handler as io
 g = io.load_generalized_from_file("examples/seed_72-10,4,10,1,10.txt")
 W1, W2 = generalized_parity_solver(g)
-"""
