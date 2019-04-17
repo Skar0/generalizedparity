@@ -40,10 +40,13 @@ def disj_parity_win(g, maxValues, k, u):
     if all(value == 1 for value in maxValues) or len(g.nodes) == 0:
         return g.get_nodes(), []
 
-    # I added this condition, which states that if there is only one node left with only odd priorities, it is winning
-    # for player 1 (since we work with complemented priorities in this algorithm)
+    # FIXME: the code below is a hacked base case, remove it when the bug is
+    # fixed. Clement added this condition, which states that if there is only
+    # one node left with only odd priorities, it is winning for player 1
+    # (since we work with complemented priorities in this algorithm)
     """
-    if len(g.nodes) == 1 and all(value%2 == 1 for value in g.nodes[g.get_nodes()[0]][1:]):
+    if len(g.nodes) == 1 and all(value % 2 == 1 for value in g.nodes[g.get_nodes()[0]][1:]):
+        print(maxValues)
         return g.get_nodes(), []
     """
 
@@ -61,10 +64,15 @@ def disj_parity_win(g, maxValues, k, u):
             copy_maxValues = copy.copy(maxValues)
             copy_maxValues[i] -= 2
             # a few sanity checks here
-            assert(copy_maxValues[i] >= 0)
+            assert(copy_maxValues[i] >= 0 or len(H1.get_nodes()) == 0)
             assert(copy_maxValues[i] == maxValues[i] - 2)
-            # end of sanitu checks
+            # end of sanity checks
             W1, W2 = disj_parity_win(H1, copy_maxValues, k, u + 1)
+            # if all priorities were odd, then W1 union G1.V should be g.V
+            assert(set(G1.get_nodes()).union(set(W1)) != g.get_nodes() or
+                   any(value % 2 == 0 for n in g.get_nodes()
+                       for value in g.nodes[n][i]))
+            # end of sanity check for winner in odd-only arenas
 
             if len(G1.nodes) == 0:
                 break
