@@ -153,13 +153,13 @@ def generalized_parity_solver(g):
 
 
 if __name__ == "__main__":
-    g = file_handler.load_generalized_from_file("examples/seed_60-60,3,60,1,3.txt")
+    g = file_handler.load_generalized_from_file("examples/seed__52-52,3,52,1,3.txt")
     pr = cProfile.Profile()
     pr.enable()
     W1, W2 = generalized_parity_solver(g)
     pr.disable()
-    s = io.StringIO()
-    sortby = pstats.SortKey.CUMULATIVE
+    s = io.BytesIO()
+    sortby = 'cumulative'
     ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
     ps.print_stats()
     print(s.getvalue())
