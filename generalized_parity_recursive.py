@@ -1,4 +1,5 @@
 import copy
+import file_handler as io
 
 from fatalattractors import attractors as reachability
 import operations as ops
@@ -46,32 +47,30 @@ def disj_parity_win(g, maxValues, k, u):
     # (since we work with complemented priorities in this algorithm)
     # if len(g.nodes) == 1 and all(value % 2 == 1 for value in g.nodes[g.get_nodes()[0]][1:]):
     #     return g.get_nodes(), []
-
     for i in range(k):
-
+        if u <= 4:
+            print("-" * u + str(i))
         attMaxOdd, compl_attMaxOdd = reachability.attractor(g, ops.i_priority_node_function_j(g, maxValues[i], i + 1),
                                                             0)
         G1 = g.subgame(compl_attMaxOdd)
         attMaxEven, compl_attMaxEven = reachability.attractor(G1, ops.i_priority_node_function_j(G1, maxValues[i] - 1,
                                                                                                  i + 1), 1)
         H1 = G1.subgame(compl_attMaxEven)
-        # sanity check: H1 should be smaller than the original game
-        assert(len(H1.get_nodes()) < len(g.get_nodes()))
-        # j = 0  # not used
         while True:
-            # j += 1  # not used
+            h1_old_len = len(H1.get_nodes())
             copy_maxValues = copy.copy(maxValues)
             copy_maxValues[i] -= 2
-            # a few sanity checks here
+            # sanity check: on recursive calls we have less priorities
+            # and we only get negative max priorities on empty games
             assert(copy_maxValues[i] >= 0 or len(H1.get_nodes()) == 0)
             assert(copy_maxValues[i] == maxValues[i] - 2)
-            # end of sanity checks
+            # end of sanity check
             W1, W2 = disj_parity_win(H1, copy_maxValues, k, u + 1)
-            # if all priorities were odd, then W1 union G1.V should be g.V
-            assert(set(G1.get_nodes()).union(set(W1)) != g.get_nodes() or
-                   any(value % 2 == 0 for n in g.get_nodes()
-                       for value in g.nodes[n][i]))
-            # end of sanity check for winner in odd-only arenas
+            # sanity check: if all priorities were odd, then W1 union G1.V should be g.V
+            assert(set(G1.get_nodes()).union(set(W1)) != g.get_nodes()
+                   or any(value % 2 == 0 for n in g.get_nodes()
+                          for value in g.nodes[n][i]))
+            # end of sanity check
 
             if len(G1.nodes) == 0 or set(W2) == set(H1.get_nodes()):
                 break
@@ -80,17 +79,20 @@ def disj_parity_win(g, maxValues, k, u):
             G1 = G1.subgame(compl_T)
             E, compl_E = reachability.attractor(G1, ops.i_priority_node_function_j(g, maxValues[i] - 1, i + 1), 0)
             H1 = G1.subgame(compl_E)
+            assert(len(H1.get_nodes()) < h1_old_len)
 
         # checks after the end of the loop (base cases, essentially)
         if set(W2) == set(H1.get_nodes()) and len(G1.nodes) > 0:
             assert(len(G1.get_nodes()) > 0)  # otherwise this makes no sense!
             B, compl_B = reachability.attractor(g, G1.get_nodes(), 1)
+            # sanity check: we always do a recursive call on a smaller game
+            # and so necessarily B is non-empty
+            assert(len(B) > 0)
+            # end of sanity check
             W1, W2 = disj_parity_win(g.subgame(compl_B), maxValues, k, u + 1)
             B.extend(W2)
             return W1, B
 
-    print(maxValues)
-    print(g.nodes[g.get_nodes()[0]][1:])
     return g.get_nodes(), []
 
 
@@ -126,6 +128,5 @@ def generalized_parity_solver(g):
     return disj_parity_win(transformed, maxValues, nbrFunctions, 0)
 
 
-import file_handler as io
 g = io.load_generalized_from_file("examples/seed_72-10,4,10,1,10.txt")
 W1, W2 = generalized_parity_solver(g)
