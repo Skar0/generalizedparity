@@ -1,8 +1,34 @@
+import cProfile
+import pstats
+import io
 import copy
-import file_handler as io
+import file_handler
 
 from fatalattractors import attractors as reachability
-import operations as ops
+from graph import Graph
+
+
+class SimpleGraph(Graph):
+    def __init__(self, other):
+        self.predecessors = other.predecessors
+        self.successors = other.successors
+        self.nodes = other.nodes
+        self.only = set(other.nodes.keys())
+
+    def subgame(self, s):
+        sub = self.__class__(self)
+        sub.only = set(s)
+        return sub
+
+    def get_nodes(self):
+        return list(set(self.nodes.keys()).intersection(self.only))
+
+    def get_predecessors(self, node):
+        return list(set(self.predecessors[node]).intersection(self.only))
+
+    def nodes_with_priority(self, i, j):
+        return [k for k, v in self.nodes.iteritems()
+                if v[j] == i and k in self.only]
 
 
 def transform_game(g, k):
@@ -50,11 +76,9 @@ def disj_parity_win(g, maxValues, k, u):
     for i in range(k):
         if u <= 4:
             print("-" * u + str(i))
-        attMaxOdd, compl_attMaxOdd = reachability.attractor(g, ops.i_priority_node_function_j(g, maxValues[i], i + 1),
-                                                            0)
+        attMaxOdd, compl_attMaxOdd = reachability.attractor(g, g.nodes_with_priority(maxValues[i], i + 1), 0)
         G1 = g.subgame(compl_attMaxOdd)
-        attMaxEven, compl_attMaxEven = reachability.attractor(G1, ops.i_priority_node_function_j(G1, maxValues[i] - 1,
-                                                                                                 i + 1), 1)
+        attMaxEven, compl_attMaxEven = reachability.attractor(G1, G1.nodes_with_priority(maxValues[i] - 1, i + 1), 1)
         H1 = G1.subgame(compl_attMaxEven)
         while True:
             h1_old_len = len(H1.get_nodes())
@@ -77,8 +101,7 @@ def disj_parity_win(g, maxValues, k, u):
 
             T, compl_T = reachability.attractor(G1, W1, 0)
             G1 = G1.subgame(compl_T)
-            E, compl_E = reachability.attractor(G1,
-                                                ops.i_priority_node_function_j(G1, maxValues[i] - 1, i + 1), 0)
+            E, compl_E = reachability.attractor(G1, G1.nodes_with_priority(maxValues[i] - 1, i + 1), 0)
             H1 = G1.subgame(compl_E)
             assert(len(H1.get_nodes()) < h1_old_len)
 
@@ -126,8 +149,17 @@ def generalized_parity_solver(g):
         if maxValues[i] % 2 == 0:
             maxValues[i] += 1
 
-    return disj_parity_win(transformed, maxValues, nbrFunctions, 0)
+    return disj_parity_win(SimpleGraph(transformed), maxValues, nbrFunctions, 0)
 
 
-g = io.load_generalized_from_file("examples/seed_72-10,4,10,1,10.txt")
-W1, W2 = generalized_parity_solver(g)
+if __name__ == "__main__":
+    g = file_handler.load_generalized_from_file("examples/seed_60-60,3,60,1,3.txt")
+    pr = cProfile.Profile()
+    pr.enable()
+    W1, W2 = generalized_parity_solver(g)
+    pr.disable()
+    s = io.StringIO()
+    sortby = pstats.SortKey.CUMULATIVE
+    ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+    ps.print_stats()
+    print(s.getvalue())
