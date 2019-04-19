@@ -45,8 +45,6 @@ def disj_parity_win(g, maxValues, k, u):
     # one node left with only odd priorities, it is winning for player 1
     # (since we work with complemented priorities in this algorithm)
     # if len(g.nodes) == 1 and all(value % 2 == 1 for value in g.nodes[g.get_nodes()[0]][1:]):
-    #     print(maxValues)
-    #     print(g.nodes[g.get_nodes()[0]][1:])
     #     return g.get_nodes(), []
 
     for i in range(k):
@@ -57,6 +55,8 @@ def disj_parity_win(g, maxValues, k, u):
         attMaxEven, compl_attMaxEven = reachability.attractor(G1, ops.i_priority_node_function_j(G1, maxValues[i] - 1,
                                                                                                  i + 1), 1)
         H1 = G1.subgame(compl_attMaxEven)
+        # sanity check: H1 should be smaller than the original game
+        assert(len(H1.get_nodes()) < len(g.get_nodes()))
         # j = 0  # not used
         while True:
             # j += 1  # not used
@@ -82,9 +82,8 @@ def disj_parity_win(g, maxValues, k, u):
             H1 = G1.subgame(compl_E)
 
         # checks after the end of the loop (base cases, essentially)
-        if set(W2) == set(H1.get_nodes()):
+        if set(W2) == set(H1.get_nodes()) and len(G1.nodes) > 0:
             assert(len(G1.get_nodes()) > 0)  # otherwise this makes no sense!
-            print("this base case")
             B, compl_B = reachability.attractor(g, G1.get_nodes(), 1)
             W1, W2 = disj_parity_win(g.subgame(compl_B), maxValues, k, u + 1)
             B.extend(W2)
