@@ -277,6 +277,28 @@ def write_graph_to_file(g, path):
         f.write('}')
 
 
+def write_graph_PGsolver(g, path):
+    """
+    Write a graph to a .txt file in the PGSolver format.
+    :param g: a game Graph.
+    :param path: the file to which we write the graph.
+    """
+    with open(path, 'w') as f:
+        f.write("parity 10;\n")
+        for node in g.get_nodes():
+            to_write = str(node) + " "
+            for priority in g.nodes[node][1:]:
+                to_write += str(priority) + ","
+            to_write = to_write[:-1]
+            to_write += " " + str(g.nodes[node][0]) + " "
+            for successor in g.get_successors(node):
+                to_write += str(successor) + ","
+            to_write = to_write[:-1]
+            to_write += ' "' + str(node) + '"\n'
+
+            f.write(to_write)
+
+
 """
 g =\
 load_generalized_from_file("../assets/generalized parity/simple_example3.txt")
