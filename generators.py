@@ -229,25 +229,40 @@ def random_generalized(n, k, p, i, o):
     :param o: max outdegree.
     :return: a random game graph.
     """
-    import sys
-    seed = ran.randrange(41, 42)
-    rng = ran.Random(seed)
-    print("Seed was:", seed)
-    f = open("seeds.txt", "a")
-    f.write("Seed : " + str(seed) + "\n")
 
-    nodes = [x for x in xrange(n)]
-    g = Graph()
+    nodes = [x for x in xrange(n)]  # Create the nodes
+
+    g = Graph()  # Create the graph
+
+    # Add the node player and priorities
     for node in range(0, n):
-        playerpriorities = [randint(0, 1)]  # Choose a player
+
+        playerpriorities = [randint(0, 1)]  # Choose a player at random
+
+        # Add priorities at random
         for prio in range(0, k):
             playerpriorities.append(randint(0, p))
+
         g.add_node(node, tuple(playerpriorities))
+
     # Create two partitions, S and T. Initially store all nodes in S.
     S, T = set(nodes), set()
 
     # Randomly select a first node, and place it in T.
     node_s = sample(S, 1).pop()
+
+    # This node_s also needs a successor, because we assume that every node is added to T with at least one successor.
+    # If this is not the case and the number of required outgoing edges for that node is 1, it may happen that the node
+    # has no successor in the created graph.
+
+    # Pick a successor in S, this does not affect how the graph is connected
+    node_t = sample(S, 1).pop()
+
+    # Create an edge between the nodes
+    g.add_predecessor(node_t, node_s)
+    g.add_successor(node_s, node_t)
+
+    # remove node_s from S as it now has a successor and add it to T
     S.remove(node_s)
     T.add(node_s)
 
@@ -255,6 +270,7 @@ def random_generalized(n, k, p, i, o):
     while S:
         # Select random node from S, and another in T.
         node_s, node_t = sample(S, 1).pop(), sample(T, 1).pop()
+
         # Create an edge between the nodes, and move the node from S to T.
         g.add_predecessor(node_t, node_s)
         g.add_successor(node_s, node_t)
@@ -262,8 +278,12 @@ def random_generalized(n, k, p, i, o):
         T.add(node_s)
 
     for node in range(0, n):
+        # number of successors required for that node is picked at random
         num = randint(i, o)
-        edges_added = 0
+        # we assume the node has at least one outgoing edge
+        # if this was not the case (assume edges_added = 0) and the number of outgoing edges is the number
+        # of nodes in the game, the graph could not be created as one of the edges would need to appear twice
+        edges_added = 1
         while edges_added < num:
             to = choice(nodes)
             if not (to in g.get_successors(node)):
@@ -271,7 +291,6 @@ def random_generalized(n, k, p, i, o):
                 g.add_predecessor(to, node)
                 edges_added += 1
 
-    print(g)
     return g
 
 
