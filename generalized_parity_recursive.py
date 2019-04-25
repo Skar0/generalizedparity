@@ -84,9 +84,9 @@ def disj_parity_win(g, maxValues, k, u):
                 T, compl_T = reachability.attractor(G1, W1, 0)
                 G1 = G1.subgame(compl_T)
                 E, compl_E = reachability.attractor(G1,
-                                                    ops.i_priority_node_function_j(G1, maxValues[i] - 1, i + 1), 0)
+                                                    ops.i_priority_node_function_j(G1, maxValues[i] - 1, i + 1), 1)
                 H1 = G1.subgame(compl_E)
-                assert(len(H1.get_nodes()) < h1_old_len)
+                #assert(len(H1.get_nodes()) < h1_old_len)
 
             # checks after the end of the loop (base cases, essentially)
             if set(W2) == set(H1.get_nodes()) and len(G1.get_nodes()) > 0:
