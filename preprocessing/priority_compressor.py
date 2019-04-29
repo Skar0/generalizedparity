@@ -64,7 +64,7 @@ def compress_priorities_generalized(g):
     g_copy = copy.deepcopy(g)
 
     # Compress every priority function
-    for i in range(1, g.get_nbr_priority_functions()):
+    for i in range(1, g.get_nbr_priority_functions()+1):
         compress_function(g_copy, i)
 
     return g_copy
