@@ -12,6 +12,8 @@ def buchi_inter_cobuchi(g, u, s):
     :return: w_0, w_1 the winning regions.
     """
 
+    # TODO check if we need both winning regions
+
     # We iterate over several subgames
     current_game = g
 
