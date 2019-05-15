@@ -185,7 +185,7 @@ def psolB_buchi_cobuchi(g, W1, W2):
 
         # TODO check list comparison efficiency
 
-        w = cobuchi.buchi_inter_cobuchi(g, target_set, not_target_set_bigger)
+        w = cobuchi.buchi_inter_cobuchi_player(g, target_set, not_target_set_bigger, color % 2)
 
         if DEBUG_PRINT: print(" MA " + str(w) + " Player " + str(g.get_node_player(target_set[0])) + "\n")
 
