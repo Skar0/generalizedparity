@@ -2,6 +2,9 @@
 from collections import deque, defaultdict
 
 import operations as ops
+
+import buchi.buchi_inter_cobuchi as cobuchi
+import buchi.buchi_inter_safety as safety
 from attractors import init_out, attractor
 
 DEBUG_PRINT = False
@@ -154,5 +157,93 @@ def psolB(g, W1, W2):
 
             else:
                 target_set = list(set(target_set).intersection(set(MA)))
+
+    return g, W1, W2
+
+
+def psolB_buchi_cobuchi(g, W1, W2):
+    """
+    Partial solver psolB for parity games using fatal attractors.
+    :param g:
+    :type g: Graph
+    :return:
+    :rtype:
+    """
+    # TODO check the ascending or descending order used by the algorithm
+    for color in sort_colors_ascending(g):
+
+        if DEBUG_PRINT: print("Computing for color " + str(color))
+
+        target_set = ops.i_priority_node(g, color)  # set of nodes of color 'color'
+
+        # TODO here replace previous call by a call which goes through each node and add it to in/out set of color i
+
+        not_target_set_bigger = []
+        for node in g.get_nodes():
+            if g.get_node_priority(node) > color:
+                not_target_set_bigger.append(node)
+
+        # TODO check list comparison efficiency
+
+        w = cobuchi.buchi_inter_cobuchi(g, target_set, not_target_set_bigger)
+
+        if DEBUG_PRINT: print(" MA " + str(w) + " Player " + str(g.get_node_player(target_set[0])) + "\n")
+
+        if w != []:
+
+            if DEBUG_PRINT: print("Set " + str(target_set) + " in MA ")
+
+            att, complement = attractor(g, w, color % 2)
+
+            if color % 2 == 0:
+                W1.extend(att)
+            else:
+                W2.extend(att)
+
+            return psolB_buchi_cobuchi(g.subgame(complement), W1, W2)
+
+    return g, W1, W2
+
+
+def psolB_buchi_safety(g, W1, W2):
+    """
+    Partial solver psolB for parity games using fatal attractors.
+    :param g:
+    :type g: Graph
+    :return:
+    :rtype:
+    """
+    # TODO check the ascending or descending order used by the algorithm
+    for color in sort_colors_ascending(g):
+
+        if DEBUG_PRINT: print("Computing for color " + str(color))
+
+        target_set = ops.i_priority_node(g, color)  # set of nodes of color 'color'
+
+        # TODO here replace previous call by a call which goes through each node and add it to in/out set of color i
+
+        not_target_set_bigger = []
+        for node in g.get_nodes():
+            if g.get_node_priority(node) > color:
+                not_target_set_bigger.append(node)
+
+        # TODO check list comparison efficiency
+
+        w = safety.buchi_inter_safety_player(g, target_set, not_target_set_bigger, (color)%2)
+
+        if DEBUG_PRINT: print(" MA " + str(w) + " Player " + str(g.get_node_player(target_set[0])) + "\n")
+
+        if w != []:
+
+            if DEBUG_PRINT: print("Set " + str(target_set) + " in MA ")
+
+            att, complement = attractor(g, w, color % 2)
+
+            if color % 2 == 0:
+                W1.extend(att)
+            else:
+                W2.extend(att)
+
+            return psolB_buchi_safety(g.subgame(complement), W1, W2)
 
     return g, W1, W2
