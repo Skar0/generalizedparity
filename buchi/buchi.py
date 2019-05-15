@@ -27,6 +27,8 @@ def buchi_classical(g, b):
         # TODO check if I really need to compute the intersection here or I can just ignore it and handle it in
         # the attractor directly.
         b_inter_v = list(set(b).intersection(set(g.get_nodes())))
+        # TODO b inter v is recomputed all the time without modifying b should we not modify b
+        # and remove the nodes suppoosed to be removed
 
         if DEBUG_PRINT: print("B inter V " + str(b_inter_v))
 
