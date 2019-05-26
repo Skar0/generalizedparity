@@ -52,8 +52,8 @@ def disj_parity_win(g, maxValues, k, u):
         # We only consider priority functions according to which every value is not 1
         if maxValues[i] != 1:
 
-            if u <= 4:
-                print("-" * u + str(i))
+            # if u <= 4:
+            #     print("-" * u + str(i))
             attMaxOdd, compl_attMaxOdd = reachability.attractor(g, ops.i_priority_node_function_j(g, maxValues[i], i + 1),
                                                                 0)
             G1 = g.subgame(compl_attMaxOdd)
@@ -86,7 +86,7 @@ def disj_parity_win(g, maxValues, k, u):
                 E, compl_E = reachability.attractor(G1,
                                                     ops.i_priority_node_function_j(G1, maxValues[i] - 1, i + 1), 1)
                 H1 = G1.subgame(compl_E)
-                #assert(len(H1.get_nodes()) < h1_old_len)
+                # assert(len(H1.get_nodes()) < h1_old_len)
 
             # checks after the end of the loop (base cases, essentially)
             if set(W2) == set(H1.get_nodes()) and len(G1.get_nodes()) > 0:
