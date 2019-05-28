@@ -75,6 +75,43 @@ def attractor(g, U, j):
     return W, Wbis
 
 
+def safe_attractor(g, U, Ubis, j):
+    out = init_out(g)
+    queue = deque()
+    regions = defaultdict(lambda: -1)
+    opponent = op.opponent(j)
+
+    for node in set(U) - set(Ubis):
+        queue.append(node)  # add node to the end of the queue
+        regions[node] = j  # set its regions to j (node is winning for j b/c reachability is satisfied)
+
+    while queue:
+        s = queue.popleft()  # remove and return node on the left side of the queue (first in, first out)
+        # iterating over the predecessors of node s
+        for sbis in set(g.get_predecessors(s)) - set(Ubis):
+            if regions[sbis] == -1:  # if sbis is not yet visited, its region is -1 by default
+                if g.get_node_player(sbis) == j:
+                    # belongs to j, set regions and strategy accordingly
+                    queue.append(sbis)
+                    regions[sbis] = j
+                elif g.get_node_player(sbis) == opponent:
+                    # belongs to j bar, decrement out. If out is 0, set the region accordingly
+                    out[sbis] -= 1
+                    if out[sbis] == 0:
+                        queue.append(sbis)
+                        regions[sbis] = j
+
+    W = []
+    Wbis = []
+    for node in g.get_nodes():
+        if regions[node] == j:
+            W.append(node)
+        else:
+            Wbis.append(node)
+
+    return W, Wbis
+
+
 def attractor_color(g, U, j, p):
     """
     Computes the attractor for player j of the set U in g. Does not create any strategy and only returns the set that
