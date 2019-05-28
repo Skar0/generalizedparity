@@ -17,6 +17,10 @@ class Graph(object):
         Nodes are stored in a dictionary where the key is the node id and the
         value is a tuple (player, priority).
         """
+        # TODO: predecessors and successors should be a list for faster access,
+        # this can be done by having nodes remember the "original" id of
+        # vertices and their index being the one used in the predecessors' and
+        # successors' lists
         self.predecessors = defaultdict(list)
         self.successors = defaultdict(list)
         self.nodes = defaultdict(tuple)
@@ -121,8 +125,8 @@ class Graph(object):
         rep = ""
         for node in self.nodes:
             rep += str(node) + " " +\
-                   str(self.nodes[node]) +\
-                   "\n" + str(node) + " -> "
+                str(self.nodes[node]) +\
+                "\n" + str(node) + " -> "
             for succ in self.successors[node]:
                 rep += str(succ) + ", "
             rep += "\n"
