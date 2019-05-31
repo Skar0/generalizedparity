@@ -164,7 +164,7 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
                         rest, W1, W2 = algorithms[k](g_copy, [], [])  # solver call
                     except Exception:
                         print("Algorithm " + str(k) + " just timed out")
-                        rest, W1, W2 = g.get_nodes(), [], []  # probably a timeout
+                        g_copy, W1, W2 = g.get_nodes(), [], []  # probably a timeout
 
                 recordings[k][j] = chrono.interval
 
@@ -183,8 +183,14 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
 
         if control_algorithm:
             print("Running the control algorithm")
+            signal.signal(signal.SIGALRM, handler)
+            signal.alarm(TIMEOUT)
+            try:
+                expected_1, expected_2 = control_algorithm(g_copy)
+            except Exception:
+                print("The control algorithm timed out")
+                break
 
-            expected_1, expected_2 = control_algorithm(g_copy)
 
             for u in range(number_of_algorithms):
                 '''
