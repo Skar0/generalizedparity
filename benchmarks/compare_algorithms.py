@@ -31,9 +31,7 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
     chrono = timer.Timer(verbose=False)  # Timer object
 
     # Games generated are size 5 to n using the specified step
-    for i in range(5, n, step):
-
-        x.append(i)
+    for i in range(1, n + 1, step):
 
         # if check_solution, we will verify the solutions are the same across the different algorithms
         if check_solution:
@@ -43,6 +41,7 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
         recordings = [[0] * iterations for z in xrange(number_of_algorithms)]
 
         g = generator(i)  # game generation
+        x.append(len(g.get_nodes()))
 
         for k in range(number_of_algorithms):
             g_copy = copy.deepcopy(g)
@@ -122,9 +121,8 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
     chrono = timer.Timer(verbose=False)  # Timer object
 
     # Games generated are size 5 to n using the specified step
-    for i in range(5, n, step):
+    for i in range(1, n + 1, step):
 
-        x.append(i)
 
         # if check_solution, we will verify the solutions are the same across the different algorithms
         if control_algorithm:
@@ -134,6 +132,8 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
         recordings = [[0] * iterations for t in xrange(number_of_algorithms)]
 
         g = generator(i)  # game generation
+        x.append(len(g.get_nodes()))
+        print("Experiments on benchmark no. " + str(i))
 
         for k in range(number_of_algorithms):
             g_copy = copy.deepcopy(g)
@@ -162,6 +162,7 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
             z[k].append(((len(g.get_nodes()) - len(rest.get_nodes())) / float(len(g.get_nodes()))) * 100)
 
         if control_algorithm:
+            print("Running the control algorithm")
 
             expected_1, expected_2 = control_algorithm(g_copy)
 
