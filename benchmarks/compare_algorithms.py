@@ -1,7 +1,20 @@
 import copy
+import signal
 import matplotlib.pyplot as plt
 from benchmarks import timer
 import operations as ops
+
+
+TIMEOUT = 60
+
+
+def set_timeout(t):
+    global TIMEOUT
+    TIMEOUT = t
+
+
+def handler(signum, frame):
+    raise Exception("Timeout!")
 
 
 def compare_complete_algorithms(algorithms, generator, n, preprocess=None, iterations=3, step=10, check_solution=False,
@@ -145,7 +158,14 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
             for j in range(iterations):
                 g_copy = copy.deepcopy(g)  # TODO is this required
                 with chrono:
-                    rest, W1, W2 = algorithms[k](g_copy, [], [])  # solver call
+                    signal.signal(signal.SIGALRM, handler)
+                    signal.alarm(TIMEOUT)
+                    try:
+                        rest, W1, W2 = algorithms[k](g_copy, [], [])  # solver call
+                    except Exception:
+                        print("Algorithm " + str(k) + " just timed out")
+                        rest, W1, W2 = g.get_nodes(), [], []  # probably a timeout
+
                 recordings[k][j] = chrono.interval
 
             min_recording = min(recordings[k])
