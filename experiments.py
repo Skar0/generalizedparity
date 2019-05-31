@@ -10,6 +10,7 @@ from benchmarks.compare_algorithms import compare_partial_algorithms
 
 
 def random_games(i):
+    # for some reason this does not work for indices < 5
     j = i + 5
     return generators.random(j, j, 1, j / 3)
 

@@ -133,8 +133,7 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
 
     chrono = timer.Timer(verbose=False)  # Timer object
 
-    # Games generated are size 5 to n using the specified step
-    for i in range(1, n + 1, step):
+    for i in range(0, n, step):
 
 
         # if check_solution, we will verify the solutions are the same across the different algorithms
@@ -164,7 +163,7 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
                         rest, W1, W2 = algorithms[k](g_copy, [], [])  # solver call
                     except Exception:
                         print("Algorithm " + str(k) + " just timed out")
-                        g_copy, W1, W2 = g.get_nodes(), [], []  # probably a timeout
+                        rest, W1, W2 = g, [], []  # probably a timeout
 
                 recordings[k][j] = chrono.interval
 
