@@ -105,8 +105,10 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
         plt.close()
 
 
-def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterations=3, step=10, control_algorithm=None,
-                               plot=False, path_time=" ", path_proportion=" ", title="plot", labels=None):
+def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
+                               iterations=3, step=10, control_algorithm=None,
+                               plot=False, path_time=" ", path_proportion=" ",
+                               title="plot", labels=None, pkl_path=""):
     """
     Compares the running time of so called partial algorithms for parity or generalized parity games.
     This compares the running time as well as the proportion of the game which is solved.
@@ -203,6 +205,12 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
                 assert (set(winning_player_2[u]).issubset(expected_2))
                 assert (set(winning_player_1[u]).issubset(expected_1))
 
+    # just in case, we also save a pickle file
+    if pkl_path:
+        xyz_pkl = open(path_proportion + ".pkl", 'wb')
+        pickle.dump((x, y, z), xyz_pkl)
+        xyz_pkl.close()
+
     if plot:
         plt.grid(True)
         plt.title(title)
@@ -237,10 +245,6 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
         plt.savefig(path_proportion, bbox_inches='tight')
         plt.clf()
         plt.close()
-        # just in case, we also save a pickle file
-        xyz_pkl = open(path_proportion + ".pkl", 'wb')
-        pickle.dump((x, y, z), xyz_pkl)
-        xyz_pkl.close()
 
 
 

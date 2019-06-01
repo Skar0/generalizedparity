@@ -32,6 +32,7 @@ def main():
                                plot=True,
                                path_time="ltl2dba_partials_time.pdf",
                                path_proportion="ltl2dba_partials_proportion.pdf",
+                               pkl_path="ltl2dba_data.pkl",
                                title="Comparison of partial solvers for " +
                                      "LTL2DBA parity games",
                                labels=["psol", "psolB",
@@ -48,6 +49,7 @@ def main():
                                plot=True,
                                path_time="ltl2dpa_partials_time.pdf",
                                path_proportion="ltl2dpa_partials_proportion.pdf",
+                               pkl_path="ltl2dpa_data.pkl",
                                title="Comparison of partial solvers for " +
                                      "LTL2DPA parity games",
                                labels=["psol", "psolB",
@@ -64,6 +66,7 @@ def main():
                                plot=True,
                                path_time="random_partials_time.pdf",
                                path_proportion="random_partials_proportion.pdf",
+                               pkl_path="random_data.pkl",
                                title="Comparison of partial solvers for " +
                                      "random parity games",
                                labels=["psol", "psolB",
