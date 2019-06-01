@@ -92,13 +92,12 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
         plt.xlabel(u'number of nodes')
         plt.ylabel(u'time (s)')
 
-        colors = ['-g.', '-r.', '-b.', '-y.', '-c.']
+        colors = ['g.', 'r.', 'b.', 'y.', 'c.']
         # plt.yscale("log") allows logatithmic y-axis
 
         points = []
         for i in range(number_of_algorithms):
-            points.extend(plt.plot(x, y[i], colors[i], label=labels[i],
-                          linestyle=None))
+            points.extend(plt.plot(x, y[i], colors[i], label=labels[i]))
 
         plt.legend(loc='upper left', handles=points)
         plt.savefig(path, bbox_inches='tight')
@@ -210,13 +209,12 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
         plt.xlabel(u'number of nodes')
         plt.ylabel(u'time (s)')
 
-        colors = ['-g.', '-r.', '-b.', '-y.', '-c.']
+        colors = ['g.', 'r.', 'b.', 'y.', 'c.']
         # plt.yscale("log") allows logatithmic y-axis
 
         points = []
         for i in range(number_of_algorithms):
-            points.extend(plt.plot(x, y[i], colors[i], label=labels[i],
-                          linestyle=None))
+            points.extend(plt.plot(x, y[i], colors[i], label=labels[i]))
 
         plt.legend(loc='upper left', handles=points)
         plt.savefig(path_time, bbox_inches='tight')
@@ -233,8 +231,7 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
 
         points = []
         for i in range(number_of_algorithms):
-            points.extend(plt.plot(x, z[i], colors[i], label=labels[i],
-                          linestyle=None))
+            points.extend(plt.plot(x, z[i], colors[i], label=labels[i]))
 
         plt.legend(loc='upper left', handles=points)
         plt.savefig(path_proportion, bbox_inches='tight')
