@@ -207,7 +207,7 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
 
     # just in case, we also save a pickle file
     if pkl_path:
-        xyz_pkl = open(path_proportion + ".pkl", 'wb')
+        xyz_pkl = open(pkl_path, 'wb')
         pickle.dump((x, y, z), xyz_pkl)
         xyz_pkl.close()
 
