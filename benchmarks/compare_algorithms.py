@@ -234,7 +234,6 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
         plt.xlabel(u'number of nodes')
         plt.ylabel(u'percentage of the game solved')
 
-        colors = ['-g.', '-r.', '-b.', '-y.', '-c.']
         # plt.yscale("log") allows logatithmic y-axis
 
         points = []
