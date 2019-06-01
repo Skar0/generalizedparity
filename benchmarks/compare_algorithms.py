@@ -1,8 +1,8 @@
 import copy
 import signal
 import matplotlib.pyplot as plt
-from benchmarks import timer
 import operations as ops
+import timer
 
 
 TIMEOUT = 60
