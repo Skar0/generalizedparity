@@ -17,10 +17,19 @@ class TestPSolC(unittest.TestCase):
         return g
 
     def test_R(self):
-        print("Testing the computation of R sets from psolC")
-        W, complement_W = psolC.R_set(self.jfs_example(), [(0, 4), (2, 2)])
-        self.assertTrue(len(W) == 0)
-        self.assertTrue(len(complement_W) == 3)
+        print("Testing the computation of R sets from psolC - on JFs example")
+        T = [(0, 2), (0, 4), (1, 2), (1, 4), (2, 2), (2, 4)]
+        W, complement_W = psolC.R_set(self.jfs_example(), T)
+        print(W)
+        self.assertTrue(len(W) == 2)
+        self.assertTrue(len(complement_W) == 1)
+
+
+    def test_psolc(self):
+        print("Testing psolc on JFs example")
+        expected_W1 = set([0, 2])
+        sg, W1, W2 = psolC.psolC(self.jfs_example(), [], [])
+        self.assertTrue(set(W1) == expected_W1)
 
 
 if __name__ == '__main__':
