@@ -91,6 +91,10 @@ class Graph(object):
     def remove_successor(self, node, successor):
         self.successors[node].remove(successor)
 
+    def add_edge(self, source, target):
+        self.successors[source].append(target)
+        self.predecessors[target].append(source)
+
     def get_predecessors(self, node):
         """
         :param node: a node id

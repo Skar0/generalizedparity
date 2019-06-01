@@ -35,6 +35,8 @@ class TestPSOL(unittest.TestCase):
         and the paper works with min parity.
         """
 
+        print("test psol paper example")
+
         g = io.load_from_file("examples/fatal_attractors_paper_example.txt")
 
         winning_region_0, winning_region_1 = zielonka.strong_parity_solver_no_strategies(g)
@@ -55,6 +57,7 @@ class TestPSOL(unittest.TestCase):
         """
         Check if solution computed by PSOL is included in the full solution computed by Zielonka's algorithm.
         """
+        print("test psol ladder")
         for i in range(self.number_of_ladder):
             g = gen.ladder(i)
             winning_region_0, winning_region_1 = zielonka.strong_parity_solver_no_strategies(g)
@@ -73,6 +76,7 @@ class TestPSOL(unittest.TestCase):
         """
         Check if solution computed by PSOL is included in the full solution computed by Zielonka's algorithm.
         """
+        print("test psol worstcase")
         for i in range(self.number_of_worstcase):
             g = gen.strong_parity_worst_case(i)
             winning_region_0, winning_region_1 = zielonka.strong_parity_solver_no_strategies(g)
@@ -92,6 +96,7 @@ class TestPSOL(unittest.TestCase):
         Check if solution computed by PSOL + edge removal is included in the full solution computed by
         Zielonka's algorithm.
         """
+        print("test psol random")
         not_solved_size = []
         for i in range(5, self.number_of_random + 5):
             g = gen.random(i, i / 2, 1, i / 3)
@@ -116,7 +121,7 @@ class TestPSOL(unittest.TestCase):
         Attractors in Parity Games: Building Blocks for Partial Solvers'. Note : priorities were inversed since we work
         with max parity and the paper works with min parity.
         """
-
+        print("test psol edge removal paper example")
         g = io.load_from_file("examples/fatal_attractors_paper_example.txt")
 
         winning_region_0, winning_region_1 = zielonka.strong_parity_solver_no_strategies(g)
@@ -138,6 +143,7 @@ class TestPSOL(unittest.TestCase):
         Check if solution computed by PSOL + edge removal is included in the full solution computed by Zielonka's
         algorithm.
         """
+        print("test psol edge removal ladder")
         for i in range(self.number_of_ladder):
             g = gen.ladder(i)
             winning_region_0, winning_region_1 = zielonka.strong_parity_solver_no_strategies(g)
@@ -158,6 +164,7 @@ class TestPSOL(unittest.TestCase):
         Check if solution computed by PSOL + edge removal is included in the full solution computed by
         Zielonka's algorithm.
         """
+        print("test psol edge removal worstcase")
         for i in range(self.number_of_worstcase):
             g = gen.strong_parity_worst_case(i)
             winning_region_0, winning_region_1 = zielonka.strong_parity_solver_no_strategies(g)
@@ -178,6 +185,7 @@ class TestPSOL(unittest.TestCase):
         Check if solution computed by PSOL +edge removal is included in the full solution computed by
         Zielonka's algorithm.
         """
+        print("test psol edge removal random")
         not_solved_size = []
         for i in range(5, self.number_of_random + 5):
             g = gen.random(i, i / 2, 1, i / 3)
