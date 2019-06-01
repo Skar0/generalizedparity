@@ -1,5 +1,6 @@
 import copy
 import signal
+import pickle
 import matplotlib.pyplot as plt
 from benchmarks import timer
 import operations as ops
@@ -96,7 +97,8 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
 
         points = []
         for i in range(number_of_algorithms):
-            points.extend(plt.plot(x, y[i], colors[i], label=labels[i]))
+            points.extend(plt.plot(x, y[i], colors[i], label=labels[i],
+                          linestyle=None))
 
         plt.legend(loc='upper left', handles=points)
         plt.savefig(path, bbox_inches='tight')
@@ -213,7 +215,8 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
 
         points = []
         for i in range(number_of_algorithms):
-            points.extend(plt.plot(x, y[i], colors[i], label=labels[i]))
+            points.extend(plt.plot(x, y[i], colors[i], label=labels[i],
+                          linestyle=None))
 
         plt.legend(loc='upper left', handles=points)
         plt.savefig(path_time, bbox_inches='tight')
@@ -230,12 +233,18 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
 
         points = []
         for i in range(number_of_algorithms):
-            points.extend(plt.plot(x, z[i], colors[i], label=labels[i]))
+            points.extend(plt.plot(x, z[i], colors[i], label=labels[i],
+                          linestyle=None))
 
         plt.legend(loc='upper left', handles=points)
         plt.savefig(path_proportion, bbox_inches='tight')
         plt.clf()
         plt.close()
+        # just in case, we also save a pickle file
+        xyz_pkl = open(path_proportion + ".pkl", 'wb')
+        pickle.dump((x, y, z), xyz_pkl)
+        xyz_pkl.close()
+
 
 
 """
