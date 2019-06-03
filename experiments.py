@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
 
+import os
+import fnmatch
 import zielonka
 import generators
-import tlsf_generators
 import fatalattractors.psol as psol
 import fatalattractors.psolB as psolB
+import fatalattractors.psolQ as psolQ
+import file_handler
 from benchmarks.compare_algorithms import compare_partial_algorithms
 
 
@@ -18,60 +21,24 @@ def random_games(i):
 def main():
     algorithms_partial = [psol.psol,
                           psolB.psolB,
-                          psolB.psolB_buchi_safety,
-                          psolB.psolB_buchi_cobuchi]
+                          psolB.psolB_buchi_cobuchi,
+                          psolQ.psolQ]
 
-    print("Running experiments for LTL2DBA examples")
+    print("Running experiments for all files in ./examples")
+    sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.pg"),
+                          os.listdir("./examples"))
+    num_examples = len(sample_files)
+
+    def all_examples(i):
+        return file_handler.load_from_file(sample_files[i])
     compare_partial_algorithms(algorithms_partial,
-                               tlsf_generators.ltl2dba_pg,
-                               tlsf_generators.ltl2dba_pg_gen_n(),
+                               all_examples,
+                               num_examples,
                                preprocess=[None, None, None, None, None],
                                iterations=3,
                                step=1,
                                control_algorithm=zielonka.strong_parity_solver_no_strategies,
-                               plot=True,
-                               path_time="ltl2dba_partials_time.pdf",
-                               path_proportion="ltl2dba_partials_proportion.pdf",
-                               pkl_path="ltl2dba_data.pkl",
-                               title="Comparison of partial solvers for " +
-                                     "LTL2DBA parity games",
-                               labels=["psol", "psolB",
-                                       "psolB Buchi-safety",
-                                       "psolB Buchi-coBuchi"])
-    print("Running experiments for LTL2DPA examples")
-    compare_partial_algorithms(algorithms_partial,
-                               tlsf_generators.ltl2dpa_pg,
-                               tlsf_generators.ltl2dpa_pg_gen_n(),
-                               preprocess=[None, None, None, None, None],
-                               iterations=3,
-                               step=1,
-                               control_algorithm=zielonka.strong_parity_solver_no_strategies,
-                               plot=True,
-                               path_time="ltl2dpa_partials_time.pdf",
-                               path_proportion="ltl2dpa_partials_proportion.pdf",
-                               pkl_path="ltl2dpa_data.pkl",
-                               title="Comparison of partial solvers for " +
-                                     "LTL2DPA parity games",
-                               labels=["psol", "psolB",
-                                       "psolB Buchi-safety",
-                                       "psolB Buchi-coBuchi"])
-    print("Running experiments for random parity games")
-    compare_partial_algorithms(algorithms_partial,
-                               random_games,
-                               500,
-                               preprocess=[None, None, None, None, None],
-                               iterations=3,
-                               step=2,
-                               control_algorithm=zielonka.strong_parity_solver_no_strategies,
-                               plot=True,
-                               path_time="random_partials_time.pdf",
-                               path_proportion="random_partials_proportion.pdf",
-                               pkl_path="random_data.pkl",
-                               title="Comparison of partial solvers for " +
-                                     "random parity games",
-                               labels=["psol", "psolB",
-                                       "psolB Buchi-safety",
-                                       "psolB Buchi-coBuchi"])
+                               pkl_path="all_data.pkl")
 
 
 if __name__ == "__main__":

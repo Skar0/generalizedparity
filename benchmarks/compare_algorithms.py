@@ -6,7 +6,7 @@ import operations as ops
 import timer
 
 
-TIMEOUT = 60
+TIMEOUT = 300
 
 
 def set_timeout(t):
@@ -133,6 +133,7 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
     y = [[] for t in xrange(number_of_algorithms)]
     z = [[] for t in xrange(number_of_algorithms)]
     x = []
+    game_parameters = []
 
     chrono = timer.Timer(verbose=False)  # Timer object
 
@@ -147,6 +148,9 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
         recordings = [[0] * iterations for t in xrange(number_of_algorithms)]
 
         g = generator(i)  # game generation
+        game_parameters.append((len(g.get_nodes()), 
+                                g.get_nbr_priority_functions()))
+
         x.append(len(g.get_nodes()))
         print("Experiments on benchmark no. " + str(i))
 
@@ -208,7 +212,7 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
     # just in case, we also save a pickle file
     if pkl_path:
         xyz_pkl = open(pkl_path, 'wb')
-        pickle.dump((x, y, z), xyz_pkl)
+        pickle.dump((game_parameters, x, y, z), xyz_pkl)
         xyz_pkl.close()
 
     if plot:
