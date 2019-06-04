@@ -6,7 +6,7 @@ import operations as ops
 import timer
 
 
-TIMEOUT = 30
+TIMEOUT = 300
 
 
 def set_timeout(t):
@@ -108,6 +108,7 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
 def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
                                iterations=3, step=10, control_algorithm=None,
                                plot=False, path_time=" ", path_proportion=" ",
+                               path_bulkprop=" ",
                                title="plot", labels=None, pkl_path=""):
     """
     Compares the running time of so called partial algorithms for parity or generalized parity games.
@@ -246,6 +247,28 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
 
         plt.legend(loc='upper left', handles=points)
         plt.savefig(path_proportion, bbox_inches='tight')
+        plt.clf()
+        plt.close()
+
+        class_pct = range(5, 105, 5)
+
+        plt.grid(True)
+        plt.title("Benchmark node classification")
+        plt.xlabel(u'classification %')
+        plt.ylabel(u'no. of benchmarks')
+
+        colors = ['g.', 'r.', 'b.', 'y.', 'c.']
+
+        points = []
+        for i in range(number_of_algorithms):
+            vals = []
+            for p in class_pct:
+                vals.append(sum([1 if v >= p else 0
+                                 for v in z[i]]))
+            points.extend(plt.plot(class_pct, vals, colors[i], label=labels[i]))
+
+        plt.legend(loc='lower left', handles=points)
+        plt.savefig(path_bulkprop, bbox_inches='tight')
         plt.clf()
         plt.close()
 
