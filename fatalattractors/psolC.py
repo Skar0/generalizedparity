@@ -31,7 +31,6 @@ def R_set(g, target_set, j):
                 options = filter(lambda x: x >= pred_priority and
                                  x <= priority, ascending_priorities)
             for p in options:
-                print(str((pred, p)) + "->" + str((node, priority)))
                 if regions[(pred, p)] == -1:  # vertex-priority is undecided
                     if pred_player == j:
                         regions[(pred, p)] = j
@@ -53,17 +52,15 @@ def R_set(g, target_set, j):
 
 def jfs_algo(g, j):
     assert(j == 0 or j == 1)
-    node_set = set(g.get_nodes())
     ascending_priorities = g.get_sorted_priorities()
     j_priorities = filter(lambda x: (x % 2) == j, ascending_priorities)
-    T = set([(v, p) for v in node_set for p in j_priorities])
-    next_F, _ = R_set(g, T, j)
+    T = set([(v, p) for v in g.get_nodes() for p in j_priorities])
+    next_F = R_set(g, T, j)
     F = set()
     while next_F != F:
         F = next_F
-        print("F = " + str(F))
         T = set([(v, p) for v in F for p in j_priorities])
-        next_F, _ = R_set(g, T, j)
+        next_F = R_set(g, T, j)
         next_F = next_F & F
     return F
 

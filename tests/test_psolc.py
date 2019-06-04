@@ -19,16 +19,15 @@ class TestPSolC(unittest.TestCase):
     def test_R(self):
         print("Testing the computation of R sets from psolC - on JFs example")
         T = [(0, 2), (0, 4), (1, 2), (1, 4), (2, 2), (2, 4)]
-        W, complement_W = psolC.R_set(self.jfs_example(), T)
+        W = psolC.R_set(self.jfs_example(), T, 0)
         print(W)
         self.assertTrue(len(W) == 2)
-        self.assertTrue(len(complement_W) == 1)
 
 
     def test_jfs_algo(self):
         print("Testing JFs algo on JFs example")
         expected_W = set([0, 2])
-        W = psolC.jfs_algo(self.jfs_example())
+        W = psolC.jfs_algo(self.jfs_example(), 0)
         self.assertTrue(set(W) == expected_W)
 
 
