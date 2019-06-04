@@ -5,9 +5,11 @@ from antichain import Antichain
 class TestAntichainMethods(unittest.TestCase):
 
     def test_natvectors(self):
+        print("Testing natural vector antichains")
+
         def compare_lists(t1, t2):
             return len(t1) == len(t2) and\
-                   all(map(lambda x: x[0] <= x[1], zip(t1, t2)))
+                all(map(lambda x: x[0] <= x[1], zip(t1, t2)))
 
         def meet_lists(t1, t2):
             assert len(t1) == len(t2)

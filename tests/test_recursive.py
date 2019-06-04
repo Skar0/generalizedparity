@@ -26,7 +26,7 @@ class TestRecursive(unittest.TestCase):
         We create random parity games and transform them into generalized parity games by using a copy of the first
         priority function as a second priority function.
         """
-
+        print("test recursive single priority random")
         for i in range(5, self.number_of_random + 5):
             g = gen.random(i, i / 2, 1, i / 3)
 
@@ -42,7 +42,7 @@ class TestRecursive(unittest.TestCase):
         We create random parity games and transform them into generalized parity games by using a copy of the first
         priority function as a second priority function.
         """
-
+        print("test recursive double priority random")
         for i in range(5, self.number_of_random_double + 5):
             g = gen.random(i, i / 2, 1, i / 3)
 
@@ -59,7 +59,7 @@ class TestRecursive(unittest.TestCase):
         """
         Checks the solution of the recursive algorithm on examples solved by hand.
         """
-
+        print("test recursive solved examples")
         g = io.load_generalized_from_file("examples/example_0.txt")
         computed_winning_0, computed_winning_1 = recursive.generalized_parity_solver(g)
         self.assertTrue(set(computed_winning_0) == {2, 4, 1, 6})
@@ -119,7 +119,7 @@ class TestRecursive(unittest.TestCase):
         Checks the solution of the recursive algorithm on worst case graphs for the recursive algorithm for regular
         parity games.
         """
-
+        print("test recursive solved worstcases")
         g = io.load_generalized_from_file("examples/worstcase_1.txt")
         computed_winning_0, computed_winning_1 = recursive.generalized_parity_solver(g)
         self.assertTrue(set(computed_winning_0) == {1, 3, 4, 2, 0})
@@ -134,7 +134,7 @@ class TestRecursive(unittest.TestCase):
         """
         Checks the solution of the recursive algorithm on graphs in which the priority functions are twice the same.
         """
-
+        print("test recursive solved double priority")
         g = io.load_generalized_from_file("examples/double_priority.txt")
         computed_winning_0, computed_winning_1 = recursive.generalized_parity_solver(g)
         self.assertTrue(set(computed_winning_0) == set())
@@ -185,7 +185,7 @@ class TestRecursive(unittest.TestCase):
         Checks the solution of the recursive algorithm on graphs in which the second priority function is the first
         priority function, but complemented. functions are twice the same.
         """
-
+        print("test recursive solved opposite priority")
         g = gen.opposite_priorities(io.load_generalized_from_file("examples/example_0.txt"))
         computed_winning_0, computed_winning_1 = recursive.generalized_parity_solver(g)
         self.assertTrue(set(computed_winning_0) == set())

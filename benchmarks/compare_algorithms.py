@@ -1,7 +1,21 @@
 import copy
+import signal
+import pickle
 import matplotlib.pyplot as plt
-from benchmarks import timer
 import operations as ops
+import timer
+
+
+TIMEOUT = 300
+
+
+def set_timeout(t):
+    global TIMEOUT
+    TIMEOUT = t
+
+
+def handler(signum, frame):
+    raise Exception("Timeout!")
 
 
 def compare_complete_algorithms(algorithms, generator, n, preprocess=None, iterations=3, step=10, check_solution=False,
@@ -31,9 +45,7 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
     chrono = timer.Timer(verbose=False)  # Timer object
 
     # Games generated are size 5 to n using the specified step
-    for i in range(5, n, step):
-
-        x.append(i)
+    for i in range(1, n + 1, step):
 
         # if check_solution, we will verify the solutions are the same across the different algorithms
         if check_solution:
@@ -43,6 +55,7 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
         recordings = [[0] * iterations for z in xrange(number_of_algorithms)]
 
         g = generator(i)  # game generation
+        x.append(len(g.get_nodes()))
 
         for k in range(number_of_algorithms):
             g_copy = copy.deepcopy(g)
@@ -79,7 +92,7 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
         plt.xlabel(u'number of nodes')
         plt.ylabel(u'time (s)')
 
-        colors = ['-g.', '-r.', '-b.', '-y.', '-c.']
+        colors = ['g.', 'r.', 'b.', 'y.', 'c.']
         # plt.yscale("log") allows logatithmic y-axis
 
         points = []
@@ -92,8 +105,11 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
         plt.close()
 
 
-def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterations=3, step=10, control_algorithm=None,
-                               plot=False, path_time=" ", path_proportion=" ", title="plot", labels=None):
+def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
+                               iterations=3, step=10, control_algorithm=None,
+                               plot=False, path_time=" ", path_proportion=" ",
+                               path_bulkprop=" ",
+                               title="plot", labels=None, pkl_path=""):
     """
     Compares the running time of so called partial algorithms for parity or generalized parity games.
     This compares the running time as well as the proportion of the game which is solved.
@@ -118,13 +134,12 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
     y = [[] for t in xrange(number_of_algorithms)]
     z = [[] for t in xrange(number_of_algorithms)]
     x = []
+    game_parameters = []
 
     chrono = timer.Timer(verbose=False)  # Timer object
 
-    # Games generated are size 5 to n using the specified step
-    for i in range(5, n, step):
+    for i in range(0, n, step):
 
-        x.append(i)
 
         # if check_solution, we will verify the solutions are the same across the different algorithms
         if control_algorithm:
@@ -134,6 +149,11 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
         recordings = [[0] * iterations for t in xrange(number_of_algorithms)]
 
         g = generator(i)  # game generation
+        game_parameters.append((len(g.get_nodes()), 
+                                g.get_nbr_priorities()))
+
+        x.append(len(g.get_nodes()))
+        print("Experiments on benchmark no. " + str(i))
 
         for k in range(number_of_algorithms):
             g_copy = copy.deepcopy(g)
@@ -145,7 +165,14 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
             for j in range(iterations):
                 g_copy = copy.deepcopy(g)  # TODO is this required
                 with chrono:
-                    rest, W1, W2 = algorithms[k](g_copy, [], [])  # solver call
+                    signal.signal(signal.SIGALRM, handler)
+                    signal.alarm(TIMEOUT)
+                    try:
+                        rest, W1, W2 = algorithms[k](g_copy, [], [])  # solver call
+                    except Exception:
+                        print("Algorithm " + str(k) + " just timed out")
+                        rest, W1, W2 = g, [], []  # probably a timeout
+
                 recordings[k][j] = chrono.interval
 
             min_recording = min(recordings[k])
@@ -162,8 +189,15 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
             z[k].append(((len(g.get_nodes()) - len(rest.get_nodes())) / float(len(g.get_nodes()))) * 100)
 
         if control_algorithm:
+            print("Running the control algorithm")
+            signal.signal(signal.SIGALRM, handler)
+            signal.alarm(TIMEOUT)
+            try:
+                expected_1, expected_2 = control_algorithm(g_copy)
+            except Exception:
+                print("The control algorithm timed out")
+                break
 
-            expected_1, expected_2 = control_algorithm(g_copy)
 
             for u in range(number_of_algorithms):
                 '''
@@ -176,13 +210,19 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
                 assert (set(winning_player_2[u]).issubset(expected_2))
                 assert (set(winning_player_1[u]).issubset(expected_1))
 
+    # just in case, we also save a pickle file
+    if pkl_path:
+        xyz_pkl = open(pkl_path, 'wb')
+        pickle.dump((game_parameters, x, y, z), xyz_pkl)
+        xyz_pkl.close()
+
     if plot:
         plt.grid(True)
         plt.title(title)
         plt.xlabel(u'number of nodes')
         plt.ylabel(u'time (s)')
 
-        colors = ['-g.', '-r.', '-b.', '-y.', '-c.']
+        colors = ['g.', 'r.', 'b.', 'y.', 'c.']
         # plt.yscale("log") allows logatithmic y-axis
 
         points = []
@@ -199,7 +239,6 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
         plt.xlabel(u'number of nodes')
         plt.ylabel(u'percentage of the game solved')
 
-        colors = ['-g.', '-r.', '-b.', '-y.', '-c.']
         # plt.yscale("log") allows logatithmic y-axis
 
         points = []
@@ -210,6 +249,29 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None, iterat
         plt.savefig(path_proportion, bbox_inches='tight')
         plt.clf()
         plt.close()
+
+        class_pct = range(5, 105, 5)
+
+        plt.grid(True)
+        plt.title("Benchmark node classification")
+        plt.xlabel(u'classification %')
+        plt.ylabel(u'no. of benchmarks')
+
+        colors = ['g.', 'r.', 'b.', 'y.', 'c.']
+
+        points = []
+        for i in range(number_of_algorithms):
+            vals = []
+            for p in class_pct:
+                vals.append(sum([1 if v >= p else 0
+                                 for v in z[i]]))
+            points.extend(plt.plot(class_pct, vals, colors[i], label=labels[i]))
+
+        plt.legend(loc='lower left', handles=points)
+        plt.savefig(path_bulkprop, bbox_inches='tight')
+        plt.clf()
+        plt.close()
+
 
 
 """
