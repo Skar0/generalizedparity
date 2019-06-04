@@ -25,10 +25,17 @@ class TestPSolC(unittest.TestCase):
         self.assertTrue(len(complement_W) == 1)
 
 
+    def test_jfs_algo(self):
+        print("Testing JFs algo on JFs example")
+        expected_W = set([0, 2])
+        W = psolC.jfs_algo(self.jfs_example())
+        self.assertTrue(set(W) == expected_W)
+
+
     def test_psolc(self):
         print("Testing psolc on JFs example")
-        expected_W1 = set([0, 2])
-        sg, W1, W2 = psolC.psolC(self.jfs_example(), [], [])
+        expected_W1 = set([0, 1, 2])
+        _, W1, _ = psolC.psolC(self.jfs_example(), [], [])
         self.assertTrue(set(W1) == expected_W1)
 
 

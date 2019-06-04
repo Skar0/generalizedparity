@@ -6,7 +6,7 @@ import operations as ops
 import timer
 
 
-TIMEOUT = 300
+TIMEOUT = 30
 
 
 def set_timeout(t):
@@ -149,7 +149,7 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
 
         g = generator(i)  # game generation
         game_parameters.append((len(g.get_nodes()), 
-                                g.get_nbr_priority_functions()))
+                                g.get_nbr_priorities()))
 
         x.append(len(g.get_nodes()))
         print("Experiments on benchmark no. " + str(i))

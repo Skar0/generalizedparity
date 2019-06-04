@@ -1,10 +1,12 @@
 import pickle
 
-f = open("ltl2dba_data.pkl", "r")
-(x, y, z) = pickle.load(f)
+f = open("all_data.pkl", "r")
+(game_parameters, x, y, z) = pickle.load(f)
 
-algorithms = ["psol", "psolB", "psolB Buchi-safety", "psolB Buchi-coBuchi"]
+algorithms = ["psol", "psolB", "psolB Buchi-coBuchi", "psolQ"]
 print("algorithms    " + "    ".join(algorithms))
 for j in range(len(z[0])):
-    print("ltl2dba_" + str(j + 1) +
+    (n, prts) = game_parameters[j]
+    print("benchmark " + str(j + 1) +
+          "(n=" + str(n) + ",prts=" + str(prts) + ")"
           "    " + "    ".join([format(z[i][j], "06.2f") for i in range(len(z))]))
