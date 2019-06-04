@@ -1,4 +1,4 @@
-from buchi.generalized_buchi import generalized_buchi_classical
+from generalized_buchi import generalized_buchi_classical
 from fatalattractors import attractors
 
 
