@@ -2,6 +2,9 @@ import pickle
 
 f = open("all_data.pkl", "r")
 (game_parameters, x, y, z) = pickle.load(f)
+avg = sum([prts for (_, prts) in game_parameters]) /\
+    float(len(game_parameters))
+print("average no. of colours = " + str(avg))
 
 algorithms = ["psol", "psolB", "psolB Buchi-coBuchi", "psolQ", "psolC"]
 print("algorithms    " + "    ".join(algorithms))

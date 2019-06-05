@@ -1,4 +1,5 @@
 import unittest
+import file_handler
 from graph import Graph
 from fatalattractors import psolC
 
@@ -23,19 +24,25 @@ class TestPSolC(unittest.TestCase):
         print(W)
         self.assertTrue(len(W) == 2)
 
-
     def test_jfs_algo(self):
         print("Testing JFs algo on JFs example")
         expected_W = set([0, 2])
         W = psolC.jfs_algo(self.jfs_example(), 0)
         self.assertTrue(set(W) == expected_W)
 
-
     def test_psolc(self):
         print("Testing psolc on JFs example")
         expected_W1 = set([0, 1, 2])
         _, W1, _ = psolC.psolC(self.jfs_example(), [], [])
         self.assertTrue(set(W1) == expected_W1)
+
+    def test_psolc2(self):
+        print("Testing psolc on ltl2dba_E.tlsf.pg")
+        expected_W1 = set([])
+        _, W1, W2 = psolC.psolC(
+            file_handler.load_from_file("examples/ltl2dba_E.tlsf.pg"), [], [])
+        self.assertTrue(set(W1) == expected_W1)
+        print(str(W2))
 
 
 if __name__ == '__main__':

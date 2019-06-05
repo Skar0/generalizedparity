@@ -54,7 +54,9 @@ def jfs_algo(g, j):
     assert(j == 0 or j == 1)
     ascending_priorities = g.get_sorted_priorities()
     j_priorities = filter(lambda x: (x % 2) == j, ascending_priorities)
-    T = set([(v, p) for v in g.get_nodes() for p in j_priorities])
+    T = set([(v, p) for v in g.get_nodes()
+             for p in filter(lambda x: x >= g.get_node_priority(v),
+                             j_priorities)])
     next_F = R_set(g, T, j)
     F = set()
     while next_F != F:
