@@ -21,7 +21,6 @@ class TestPSolC(unittest.TestCase):
         print("Testing the computation of R sets from psolC - on JFs example")
         T = [(0, 2), (0, 4), (1, 2), (1, 4), (2, 2), (2, 4)]
         W = psolC.R_set(self.jfs_example(), T, 0)
-        print(W)
         self.assertTrue(len(W) == 2)
 
     def test_jfs_algo(self):
@@ -29,6 +28,18 @@ class TestPSolC(unittest.TestCase):
         expected_W = set([0, 2])
         W = psolC.jfs_algo(self.jfs_example(), 0)
         self.assertTrue(set(W) == expected_W)
+
+    def test_jfs_algo2(self):
+        print("Testing JFs algo on amba_decomposed_decode")
+        g = file_handler.load_from_file(
+            "examples/amba_decomposed_decode.tlsf.pg")
+        expected_W = set([0, 3, 4, 5])
+        W = psolC.jfs_algo(g, 0)
+        self.assertTrue(set(W) == expected_W)
+
+        expected_L = set([2, 6, 7, 8, 9])
+        L = psolC.jfs_algo(g, 1)
+        self.assertTrue(set(L) == expected_L)
 
     def test_psolc(self):
         print("Testing psolc on JFs example")
@@ -42,7 +53,18 @@ class TestPSolC(unittest.TestCase):
         _, W1, W2 = psolC.psolC(
             file_handler.load_from_file("examples/ltl2dba_E.tlsf.pg"), [], [])
         self.assertTrue(set(W1) == expected_W1)
-        print(str(W2))
+
+    def test_psolc3(self):
+        print("Testing psolc algo on amba_decomposed_decode")
+        g = file_handler.load_from_file(
+            "examples/amba_decomposed_decode.tlsf.pg")
+        expected_W1 = set([0, 3, 4, 5])
+        expected_W2 = set([1, 2, 6, 7, 8, 9])
+        subg, W1, W2 = psolC.psolC(g, [], [])
+        self.assertTrue(set(W1) == expected_W1)
+        self.assertTrue(set(W2) == expected_W2)
+        print(str(subg.get_nodes()))
+        self.assertTrue(len(subg.get_nodes()) == 0)
 
 
 if __name__ == '__main__':
