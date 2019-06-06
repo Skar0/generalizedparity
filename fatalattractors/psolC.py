@@ -71,12 +71,12 @@ def psolC(g, W1, W2):
     safe_episodes = jfs_algo(g, 0)
     subgame = g
     if len(safe_episodes) > 0:
-        A, complement = attractor(g, safe_episodes, 0)
+        A, complement = attractor(subgame, safe_episodes, 0)
         W1.extend(A)
-        subgame = g.subgame(complement)
+        subgame = subgame.subgame(complement)
     safe_episodes = jfs_algo(subgame, 1)
     if len(safe_episodes) > 0:
-        A, complement = attractor(g, safe_episodes, 1)
+        A, complement = attractor(subgame, safe_episodes, 1)
         W2.extend(A)
-        subgame = g.subgame(complement)
+        subgame = subgame.subgame(complement)
     return subgame, W1, W2
