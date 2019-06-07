@@ -53,6 +53,7 @@ def main():
                                control_algorithm=zielonka.strong_parity_solver_no_strategies,
                                pkl_path="all_data.pkl")
     # generalized parity games now
+    # FIXME: these are not the right algorithms!
     algorithms_general = [psol_generalized.psol,
                           psolB_generalized.psolB]
 
