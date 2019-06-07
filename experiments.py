@@ -13,7 +13,7 @@ import fatalattractors.psol_generalized as psol_generalized
 import fatalattractors.psolB_generalized as psolB_generalized
 import fatalattractors.psolQ_generalized as psolQ_generalized
 import file_handler
-from benchmarks.compare_algorithms import compare_partial_algorithms
+from benchmarks.compare_algorithms import compare_partial_algorithms, compare_complete_algorithms_LTLbenchmarks
 
 
 def random_games(i):
@@ -35,11 +35,11 @@ def main():
     sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.pg"),
                           os.listdir("./examples"))
     num_examples = len(sample_files)
-
     def all_examples(i):
         print(sample_files[i])
         return file_handler.load_from_file(
             os.path.join("examples", sample_files[i]))
+
     compare_partial_algorithms(algorithms_partial,
                                all_examples,
                                num_examples,
@@ -83,6 +83,30 @@ def main():
                                control_algorithm=zielonka.strong_parity_solver_no_strategies,
                                pkl_path="allgen_data.pkl")
 
+    algorithms_partial_zielonka = [zielonka.strong_parity_solver_no_strategies,
+                                   zielonka.zielonka_with_psol,
+                                   zielonka.zielonka_with_psolB,
+                                   zielonka.zielonka_with_psolB_buchi_safety,
+                                   zielonka.zielonka_with_single_psolB_iteration,
+                                   zielonka.zielonka_with_psolQ]
 
+    labels_partial_zielonka = ["Zielonka",
+                               "Ziel + psol",
+                               "Ziel + psolB",
+                               "Ziel + psolB buchi-safety",
+                               "Ziel + one psolB step ",
+                               "Ziel + psolQ"]
+
+    compare_complete_algorithms_LTLbenchmarks(algorithms_partial_zielonka,
+                                all_examples,
+                                num_examples,
+                                preprocess=[None]*len(labels_partial_zielonka),
+                                iterations=3,
+                                step=1,
+                                check_solution=False,
+                                plot=True,
+                                path="all_ziel.pdf",
+                                title="Comparison of Zielonka + partial solver on LTL benchmarks",
+                                labels=labels_partial_zielonka)
 if __name__ == "__main__":
     main()
