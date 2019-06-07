@@ -35,6 +35,7 @@ def main():
     sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.pg"),
                           os.listdir("./examples"))
     num_examples = len(sample_files)
+
     def all_examples(i):
         print(sample_files[i])
         return file_handler.load_from_file(
@@ -67,8 +68,9 @@ def main():
     num_examples = len(sample_files)
 
     def all_examples(i):
-        return file_handler.load_from_file(
+        return file_handler.load_generalized_from_file(
             os.path.join("examples", sample_files[i]))
+
     compare_partial_algorithms(algorithms_general,
                                all_examples,
                                num_examples,
@@ -97,16 +99,19 @@ def main():
                                "Ziel + one psolB step ",
                                "Ziel + psolQ"]
 
-    compare_complete_algorithms_LTLbenchmarks(algorithms_partial_zielonka,
-                                all_examples,
-                                num_examples,
-                                preprocess=[None]*len(labels_partial_zielonka),
-                                iterations=3,
-                                step=1,
-                                check_solution=False,
-                                plot=True,
-                                path="all_ziel.pdf",
-                                title="Comparison of Zielonka + partial solver on LTL benchmarks",
-                                labels=labels_partial_zielonka)
+    compare_complete_algorithms_LTLbenchmarks(
+        algorithms_partial_zielonka,
+        all_examples,
+        num_examples,
+        preprocess=[None] * len(labels_partial_zielonka),
+        iterations=3,
+        step=1,
+        check_solution=False,
+        plot=True,
+        path="all_ziel.pdf",
+        title="Comparison of Zielonka + partial solver on LTL benchmarks",
+        labels=labels_partial_zielonka)
+
+
 if __name__ == "__main__":
     main()
