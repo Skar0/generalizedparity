@@ -36,6 +36,7 @@ def main():
     num_examples = len(sample_files)
 
     def all_examples(i):
+        print(sample_files[i])
         return file_handler.load_from_file(
             os.path.join("examples", sample_files[i]))
     compare_partial_algorithms(algorithms_partial,
