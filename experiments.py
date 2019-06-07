@@ -11,6 +11,7 @@ import fatalattractors.psolC as psolC
 import fatalattractors.psolQ as psolQ
 import fatalattractors.psol_generalized as psol_generalized
 import fatalattractors.psolB_generalized as psolB_generalized
+import fatalattractors.psolQ_generalized as psolQ_generalized
 import file_handler
 from benchmarks.compare_algorithms import compare_partial_algorithms
 
@@ -55,8 +56,10 @@ def main():
                                pkl_path="all_data.pkl")
     # generalized parity games now
     # FIXME: these are not the right algorithms!
-    algorithms_general = [psol_generalized.psol,
-                          psolB_generalized.psolB]
+    labels = ["psol", "psolB", "psolQ", "psolC"]
+    algorithms_general = [psol_generalized.psol_generalized,
+                          psolB_generalized.psolB_generalized_inline,
+                          psolQ_generalized.psolQ_generalized]
 
     print("experiments for generalized parity games: all files in ./examples")
     sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.gpg"),

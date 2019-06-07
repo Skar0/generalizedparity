@@ -41,6 +41,19 @@ class TestPSolC(unittest.TestCase):
         L = psolC.jfs_algo(g, 1)
         self.assertTrue(set(L) == expected_L)
 
+    def test_jfs_algo3(self):
+        print("Testing JFs algo on ltl2dba22")
+        g = file_handler.load_from_file(
+            "examples/ltl2dba22.tlsf.pg")
+        # winning
+        expected_W = set([])
+        W = psolC.jfs_algo(g, 0)
+        self.assertTrue(set(W) == expected_W)
+        # losing
+        expected_L = set([0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 13,14])
+        L = psolC.jfs_algo(g, 1)
+        self.assertTrue(set(L) == expected_L)
+
     def test_psolc(self):
         print("Testing psolc on JFs example")
         expected_W1 = set([0, 1, 2])
@@ -63,7 +76,17 @@ class TestPSolC(unittest.TestCase):
         subg, W1, W2 = psolC.psolC(g, [], [])
         self.assertTrue(set(W1) == expected_W1)
         self.assertTrue(set(W2) == expected_W2)
-        print(str(subg.get_nodes()))
+        self.assertTrue(len(subg.get_nodes()) == 0)
+
+    def test_psolc4(self):
+        print("Testing psolc algo on ltl2dba22")
+        g = file_handler.load_from_file(
+            "examples/ltl2dba22.tlsf.pg")
+        expected_W1 = set([])
+        expected_W2 = set(range(0, 15))
+        subg, W1, W2 = psolC.psolC(g, [], [])
+        self.assertTrue(set(W1) == expected_W1)
+        self.assertTrue(set(W2) == expected_W2)
         self.assertTrue(len(subg.get_nodes()) == 0)
 
 

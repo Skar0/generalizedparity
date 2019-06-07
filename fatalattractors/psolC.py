@@ -61,7 +61,9 @@ def jfs_algo(g, j):
     F = set()
     while next_F != F:
         F = next_F
-        T = set([(v, p) for v in F for p in j_priorities])
+        T = set([(v, p) for v in F
+                 for p in filter(lambda x: x >= g.get_node_priority(v),
+                                 j_priorities)])
         next_F = R_set(g, T, j)
         next_F = next_F & F
     return F
