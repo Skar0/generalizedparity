@@ -9,8 +9,9 @@ import fatalattractors.psol as psol
 import fatalattractors.psolB as psolB
 import fatalattractors.psolC as psolC
 import fatalattractors.psolQ as psolQ
-#import fatalattractors.psol_generalized as psol_generalized
-#import fatalattractors.psolB_generalized as psolB_generalized
+import fatalattractors.psol_generalized as psol_generalized
+import fatalattractors.psolB_generalized as psolB_generalized
+import fatalattractors.psolQ_generalized as psolQ_generalized
 import file_handler
 from benchmarks.compare_algorithms import compare_partial_algorithms
 
@@ -36,6 +37,7 @@ def main():
     num_examples = len(sample_files)
 
     def all_examples(i):
+        print(sample_files[i])
         return file_handler.load_from_file(
             os.path.join("examples", sample_files[i]))
     compare_partial_algorithms(algorithms_partial,
@@ -49,32 +51,37 @@ def main():
                                path_time="all_time.pdf",
                                path_proportion="all_prop.pdf",
                                path_bulkprop="all_bulkprop.pdf",
+                               path_tottime="all_tottime.pdf",
                                control_algorithm=zielonka.strong_parity_solver_no_strategies,
                                pkl_path="all_data.pkl")
     # generalized parity games now
-    algorithms_general = [psol_generalized.psol,
-                          psolB_generalized.psolB]
+    # FIXME: these are not the right algorithms!
+    labels = ["psol", "psolB", "psolQ", "psolC"]
+    algorithms_general = [psol_generalized.psol_generalized,
+                          psolB_generalized.psolB_generalized_inline,
+                          psolQ_generalized.psolQ_generalized]
 
-    # print("experiments for generalized parity games: all files in ./examples")
-    # sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.gpg"),
-    #                       os.listdir("./examples"))
-    # num_examples = len(sample_files)
+    print("experiments for generalized parity games: all files in ./examples")
+    sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.gpg"),
+                          os.listdir("./examples"))
+    num_examples = len(sample_files)
 
-    # def all_examples(i):
-    #     return file_handler.load_from_file(
-    #         os.path.join("examples", sample_files[i]))
-    # compare_partial_algorithms(algorithms_general,
-    #                            all_examples,
-    #                            num_examples,
-    #                            preprocess=[None, None, None, None, None],
-    #                            iterations=3,
-    #                            step=1,
-    #                            plot=True,
-    #                            path_time="allgen_time.pdf",
-    #                            path_proportion="allgen_prop.pdf",
-    #                            path_bulkprop="allgen_bulkprop.pdf",
-    #                            control_algorithm=zielonka.strong_parity_solver_no_strategies,
-    #                            pkl_path="allgen_data.pkl")
+    def all_examples(i):
+        return file_handler.load_from_file(
+            os.path.join("examples", sample_files[i]))
+    compare_partial_algorithms(algorithms_general,
+                               all_examples,
+                               num_examples,
+                               preprocess=[None, None, None, None, None],
+                               iterations=3,
+                               step=1,
+                               plot=True,
+                               path_time="allgen_time.pdf",
+                               path_proportion="allgen_prop.pdf",
+                               path_bulkprop="allgen_bulkprop.pdf",
+                               path_tottime="allgen_tottime.pdf",
+                               control_algorithm=zielonka.strong_parity_solver_no_strategies,
+                               pkl_path="allgen_data.pkl")
 
 
 if __name__ == "__main__":

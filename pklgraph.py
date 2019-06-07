@@ -11,28 +11,36 @@ f = open("all_data.pkl", "r")
 # y contains times of solving benchmarks and
 # z contains percentages of node classification
 
-algorithms = ["psol", "psolB", "psolB Buchi-coBuchi", "psolQ"]
+algorithms = ["psol", "psolB", "psolB Buchi-coBuchi", "psolQ", "psolC"]
 
-# we need to compute points for percentages in 5i blocks and with values from
-# how many benchmarks have been classified by that much
-class_pct = range(5, 105, 5)
+# we need to compute how many benchmarks there are
+bench_count = range(1, len(x) + 1)
+# now we need to sort the running times of the algorithms in increasing order
+# and add them
+solve_times = [sorted(y[i]) for i in range(len(y))]
+tot_solve_times = []
+for i in range(len(y)):
+    cst = []
+    total_time = 0
+    for j in range(len(x)):
+        total_time += solve_times[i][j]
+        cst.append(total_time)
+    tot_solve_times.append(cst)
 
 plt.grid(True)
-plt.title("Benchmark node classification")
-plt.xlabel(u'classification %')
-plt.ylabel(u'no. of benchmarks')
+plt.title("Cumulative time graph")
+plt.xlabel(u'no. of benchmarks')
+plt.ylabel(u'total time spent')
+plt.yscale("log")  # allows logatithmic y-axis
 
 colors = ['g.', 'r.', 'b.', 'y.', 'c.']
 
 points = []
 for i in range(len(algorithms)):
-    vals = []
-    for p in class_pct:
-        vals.append(sum([1 if v >= p else 0
-                         for v in z[i]]))
-    points.extend(plt.plot(class_pct, vals, colors[i], label=algorithms[i]))
+    points.extend(plt.plot(bench_count, tot_solve_times[i],
+                  colors[i], label=algorithms[i]))
 
-plt.legend(loc='lower left', handles=points)
-plt.savefig("all_pgs_classification.pdf", bbox_inches='tight')
+plt.legend(loc='lower right', handles=points)
+plt.savefig("all_tottime.pdf", bbox_inches='tight')
 plt.clf()
 plt.close()

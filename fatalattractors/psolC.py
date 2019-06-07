@@ -54,12 +54,16 @@ def jfs_algo(g, j):
     assert(j == 0 or j == 1)
     ascending_priorities = g.get_sorted_priorities()
     j_priorities = filter(lambda x: (x % 2) == j, ascending_priorities)
-    T = set([(v, p) for v in g.get_nodes() for p in j_priorities])
+    T = set([(v, p) for v in g.get_nodes()
+             for p in filter(lambda x: x >= g.get_node_priority(v),
+                             j_priorities)])
     next_F = R_set(g, T, j)
     F = set()
     while next_F != F:
         F = next_F
-        T = set([(v, p) for v in F for p in j_priorities])
+        T = set([(v, p) for v in F
+                 for p in filter(lambda x: x >= g.get_node_priority(v),
+                                 j_priorities)])
         next_F = R_set(g, T, j)
         next_F = next_F & F
     return F
@@ -69,12 +73,12 @@ def psolC(g, W1, W2):
     safe_episodes = jfs_algo(g, 0)
     subgame = g
     if len(safe_episodes) > 0:
-        A, complement = attractor(g, safe_episodes, 0)
+        A, complement = attractor(subgame, safe_episodes, 0)
         W1.extend(A)
-        subgame = g.subgame(complement)
+        subgame = subgame.subgame(complement)
     safe_episodes = jfs_algo(subgame, 1)
     if len(safe_episodes) > 0:
-        A, complement = attractor(g, safe_episodes, 1)
+        A, complement = attractor(subgame, safe_episodes, 1)
         W2.extend(A)
-        subgame = g.subgame(complement)
+        subgame = subgame.subgame(complement)
     return subgame, W1, W2

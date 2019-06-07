@@ -6,7 +6,7 @@ import operations as ops
 import timer
 
 
-TIMEOUT = 300
+TIMEOUT = 30
 
 
 def set_timeout(t):
@@ -231,7 +231,7 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
 def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
                                iterations=3, step=10, control_algorithm=None,
                                plot=False, path_time=" ", path_proportion=" ",
-                               path_bulkprop=" ",
+                               path_bulkprop=" ", path_tottime=" ",
                                title="plot", labels=None, pkl_path=""):
     """
     Compares the running time of so called partial algorithms for parity or generalized parity games.
@@ -392,6 +392,38 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
 
         plt.legend(loc='lower left', handles=points)
         plt.savefig(path_bulkprop, bbox_inches='tight')
+        plt.clf()
+        plt.close()
+
+        # we need to compute how many benchmarks there are
+        bench_count = range(1, len(x) + 1)
+        # now we need to sort the running times of the algorithms in increasing order
+        # and add them
+        sorted_times = [sorted(y[i]) for i in range(len(y))]
+        tot_solve_times = []
+        for i in range(len(y)):
+            cst = []
+            total_time = 0
+            for j in range(len(x)):
+                total_time += sorted_times[i][j]
+                cst.append(total_time)
+            tot_solve_times.append(cst)
+
+        plt.grid(True)
+        plt.title("Cumulative time graph")
+        plt.xlabel(u'no. of benchmarks')
+        plt.ylabel(u'total time spent')
+        plt.yscale("log")  # allows logatithmic y-axis
+
+        colors = ['g.', 'r.', 'b.', 'y.', 'c.']
+
+        points = []
+        for i in range(number_of_algorithms):
+            points.extend(plt.plot(bench_count, tot_solve_times[i],
+                          colors[i], label=labels[i]))
+
+        plt.legend(loc='lower right', handles=points)
+        plt.savefig(path_tottime, bbox_inches='tight')
         plt.clf()
         plt.close()
 
