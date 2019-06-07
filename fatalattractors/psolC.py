@@ -30,6 +30,7 @@ def R_set(g, target_set, j):
                 assert(priority == g.get_node_priority(node))
                 options = filter(lambda x: x >= pred_priority and
                                  x <= priority, ascending_priorities)
+                assert(len(options) > 0)
             for p in options:
                 if regions[(pred, p)] == -1:  # vertex-priority is undecided
                     if pred_player == j:
@@ -52,8 +53,8 @@ def R_set(g, target_set, j):
 
 def jfs_algo(g, j):
     assert(j == 0 or j == 1)
-    ascending_priorities = g.get_sorted_priorities()
-    j_priorities = filter(lambda x: (x % 2) == j, ascending_priorities)
+    j_priorities = filter(lambda x: (x % 2) == j,
+                          g.get_sorted_priorities())
     T = set([(v, p) for v in g.get_nodes()
              for p in filter(lambda x: x >= g.get_node_priority(v),
                              j_priorities)])
@@ -76,9 +77,11 @@ def psolC(g, W1, W2):
         A, complement = attractor(subgame, safe_episodes, 0)
         W1.extend(A)
         subgame = subgame.subgame(complement)
+        subgame, W1, W2 = psolC(subgame, W1, W2)
     safe_episodes = jfs_algo(subgame, 1)
     if len(safe_episodes) > 0:
         A, complement = attractor(subgame, safe_episodes, 1)
         W2.extend(A)
         subgame = subgame.subgame(complement)
+        subgame, W1, W2 = psolC(subgame, W1, W2)
     return subgame, W1, W2

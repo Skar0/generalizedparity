@@ -108,23 +108,16 @@ class TestPSolC(unittest.TestCase):
         g = file_handler.load_from_file(
             "examples/ltl2dba_theta.tlsf.pg")
         _, W1, _ = psolQ.psolQ(g, [], [])
-        print("expected W1 (" + str(len(W1)) + ") = " + str(W1))
         expected_W1 = set(W1)
         subg, W1, W2 = psolC.psolC(g, [], [])
-        print("got W1 (" + str(len(W1)) + ") = " + str(W1))
-        print("left unsolved: " + str(len(subg.get_nodes())))
         self.assertTrue(set(W1) == expected_W1)
         self.assertTrue(len(subg.get_nodes()) == 0)
 
     def test_psolc6(self):
-        print("Testing psolc algo on gaps example")
         g = self.gaps_example()
         _, W1, _ = psolQ.psolQ(g, [], [])
-        print("expected W1 (" + str(len(W1)) + ") = " + str(W1))
         expected_W1 = set(W1)
         subg, W1, W2 = psolC.psolC(g, [], [])
-        print("got W1 (" + str(len(W1)) + ") = " + str(W1))
-        print("left unsolved: " + str(len(subg.get_nodes())))
         self.assertTrue(set(W1) == expected_W1)
         self.assertTrue(len(subg.get_nodes()) == 0)
 
@@ -133,14 +126,9 @@ class TestPSolC(unittest.TestCase):
         g = file_handler.load_from_file(
             "examples/full_arbiter_unreal3.tlsf.pg")
         _, W1, W2 = psolQ.psolQ(g, [], [])
-        print("expected W1 (" + str(len(W1)) + ") = " + str(W1))
-        print("expected W2 (" + str(len(W2)) + ") = " + str(W2))
         expected_W1 = set(W1)
         expected_W2 = set(W2)
         subg, W1, W2 = psolC.psolC(g, [], [])
-        print("got W1 (" + str(len(W1)) + ") = " + str(W1))
-        print("got W2 (" + str(len(W2)) + ") = " + str(W2))
-        print("left unsolved: " + str(len(subg.get_nodes())))
         self.assertTrue(set(W1) == expected_W1)
         self.assertTrue(set(W2) == expected_W2)
         self.assertTrue(len(subg.get_nodes()) == 0)
