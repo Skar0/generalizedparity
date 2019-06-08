@@ -6,7 +6,6 @@ import fnmatch
 import zielonka
 import generalized_parity_recursive as gpg
 import generators
-import fatalattractors.psol as psol
 import fatalattractors.psolB as psolB
 import fatalattractors.psolC as psolC
 import fatalattractors.psolQ as psolQ
@@ -25,9 +24,8 @@ def random_games(i):
 
 def main():
 
-    labels = ["psol", "psolB", "psolB Buchi-coBuchi", "psolQ", "psolC"]
-    algorithms_partial = [psol.psol,
-                          psolB.psolB,
+    labels = ["psolB", "psolB Buchi-coBuchi", "psolQ", "psolC"]
+    algorithms_partial = [psolB.psolB,
                           psolB.psolB_buchi_cobuchi,
                           psolQ.psolQ,
                           psolC.psolC]
