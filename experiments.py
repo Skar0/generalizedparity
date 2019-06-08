@@ -57,7 +57,6 @@ def main():
                                control_algorithm=zielonka.strong_parity_solver_no_strategies,
                                pkl_path="all_data.pkl")
     # generalized parity games now
-    # FIXME: these are not the right algorithms!
     labels = ["psol", "psolB", "psolQ", "psolC"]
     algorithms_general = [psol_generalized.psol_generalized,
                           psolB_generalized.psolB_generalized_inline,
@@ -86,7 +85,7 @@ def main():
                                path_tottime="allgen_tottime.pdf",
                                control_algorithm=gpg.generalized_parity_solver,
                                pkl_path="allgen_data.pkl")
-
+    # Zielonka + partial solvers now
     algorithms_partial_zielonka = [zielonka.strong_parity_solver_no_strategies,
                                    zielonka.zielonka_with_psol,
                                    zielonka.zielonka_with_psolB,
