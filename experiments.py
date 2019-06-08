@@ -4,6 +4,7 @@
 import os
 import fnmatch
 import zielonka
+import generalized_parity_recursive as gpg
 import generators
 import fatalattractors.psol as psol
 import fatalattractors.psolB as psolB
@@ -77,12 +78,13 @@ def main():
                                preprocess=[None, None, None, None, None],
                                iterations=3,
                                step=1,
+                               labels=labels,
                                plot=True,
                                path_time="allgen_time.pdf",
                                path_proportion="allgen_prop.pdf",
                                path_bulkprop="allgen_bulkprop.pdf",
                                path_tottime="allgen_tottime.pdf",
-                               control_algorithm=zielonka.strong_parity_solver_no_strategies,
+                               control_algorithm=gpg.generalized_parity_solver,
                                pkl_path="allgen_data.pkl")
 
     algorithms_partial_zielonka = [zielonka.strong_parity_solver_no_strategies,
