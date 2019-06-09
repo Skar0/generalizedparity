@@ -18,7 +18,7 @@ def handler(signum, frame):
     raise Exception("Timeout!")
 
 def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n, preprocess=None, iterations=3, step=10, check_solution=False,
-                                plot=False, path=" ", title="plot", labels=None):
+                                plot=False, path=" ", path_tot=" ", title="plot", labels=None):
     """
     Compares the running time of so called complete algorithms for parity or generalized parity games.
     This implementation is specific to LTL benchmarks as it sorts the points before plotting them.
@@ -113,11 +113,43 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n, preproce
 
             points = []
             for i in range(number_of_algorithms):
-                x, y[i] = (list(t) for t in zip(*sorted(zip(x, y[i])))) # sorting points
-                points.extend(plt.plot(x, y[i], colors[i], label=labels[i]))
+                x_cop, y_cop = (list(t) for t in zip(*sorted(zip(x, y[i])))) # sorting points
+                points.extend(plt.plot(x_cop, y_cop, colors[i], label=labels[i]))
 
             plt.legend(loc='upper left', handles=points, prop=fontP)
             plt.savefig(path, bbox_inches='tight')
+            plt.clf()
+            plt.close()
+
+            # we need to compute how many benchmarks there are
+            bench_count = range(1, len(x) + 1)
+            # now we need to sort the running times of the algorithms in increasing order
+            # and add them
+            sorted_times = [sorted(y[i]) for i in range(len(y))]
+            tot_solve_times = []
+            for i in range(len(y)):
+                cst = []
+                total_time = 0
+                for j in range(len(x)):
+                    total_time += y[i][j]
+                    cst.append(total_time)
+                tot_solve_times.append(cst)
+
+            plt.grid(True)
+            plt.title("Cumulative time graph")
+            plt.xlabel(u'no. of benchmarks')
+            plt.ylabel(u'total time spent')
+            plt.yscale("log")  # allows logatithmic y-axis
+
+            colors = ['-g.', '-r.', '-b.', '-y.', '-c.', '-k.', '-m.']
+
+            points = []
+            for i in range(number_of_algorithms):
+                points.extend(plt.plot(bench_count, tot_solve_times[i],
+                                       colors[i], label=labels[i]))
+
+            plt.legend(loc='lower right', handles=points)
+            plt.savefig(path_tot, bbox_inches='tight')
             plt.clf()
             plt.close()
 
