@@ -40,7 +40,6 @@ def main():
         return file_handler.load_from_file(
             os.path.join("examples", sample_files[i]))
 
-
     compare_partial_algorithms(algorithms_partial,
                                all_examples,
                                num_examples,
@@ -98,12 +97,12 @@ def main():
                           os.listdir("./examples"))
     num_examples = len(sample_files)
 
-    def all_examples(i):
+    def all_generalized_examples(i):
         return file_handler.load_generalized_from_file(
             os.path.join("examples", sample_files[i]))
 
     compare_partial_algorithms(algorithms_general,
-                               all_examples,
+                               all_generalized_examples,
                                num_examples,
                                preprocess=[None, None, None, None, None],
                                iterations=3,
