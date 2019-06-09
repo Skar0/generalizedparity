@@ -40,6 +40,7 @@ def main():
         return file_handler.load_from_file(
             os.path.join("examples", sample_files[i]))
 
+
     compare_partial_algorithms(algorithms_partial,
                                all_examples,
                                num_examples,
@@ -54,6 +55,38 @@ def main():
                                path_tottime="all_tottime.pdf",
                                control_algorithm=zielonka.strong_parity_solver_no_strategies,
                                pkl_path="all_data.pkl")
+
+    # Zielonka + partial solvers now
+    algorithms_partial_zielonka = [zielonka.strong_parity_solver_no_strategies,
+                                   zielonka.zielonka_with_psol,
+                                   zielonka.zielonka_with_psolB,
+                                   zielonka.zielonka_with_psolB_buchi_safety,
+                                   zielonka.zielonka_with_single_psolB_iteration,
+                                   zielonka.zielonka_with_psolQ,
+                                   zielonka.zielonka_with_psolC]
+
+    labels_partial_zielonka = ["Zielonka",
+                               "Ziel + psol",
+                               "Ziel + psolB",
+                               "Ziel + psolB buchi-safety",
+                               "Ziel + one psolB step ",
+                               "Ziel + psolQ",
+                               "Ziel + psolC"]
+
+    compare_complete_algorithms_LTLbenchmarks(
+        algorithms_partial_zielonka,
+        all_examples,
+        num_examples,
+        preprocess=[None] * len(labels_partial_zielonka),
+        iterations=3,
+        step=1,
+        check_solution=False,
+        plot=True,
+        path="all_ziel.pdf",
+        path_tot="all_ziel_cumulative.pdf",
+        title="Comparison of Zielonka + partial solver on LTL benchmarks",
+        labels=labels_partial_zielonka)
+
     # generalized parity games now
     labels = ["psol", "psolB", "psolQ", "psolC"]
     algorithms_general = [psol_generalized.psol_generalized,
@@ -83,33 +116,6 @@ def main():
                                path_tottime="allgen_tottime.pdf",
                                control_algorithm=gpg.generalized_parity_solver,
                                pkl_path="allgen_data.pkl")
-    # Zielonka + partial solvers now
-    algorithms_partial_zielonka = [zielonka.strong_parity_solver_no_strategies,
-                                   zielonka.zielonka_with_psol,
-                                   zielonka.zielonka_with_psolB,
-                                   zielonka.zielonka_with_psolB_buchi_safety,
-                                   zielonka.zielonka_with_single_psolB_iteration,
-                                   zielonka.zielonka_with_psolQ]
-
-    labels_partial_zielonka = ["Zielonka",
-                               "Ziel + psol",
-                               "Ziel + psolB",
-                               "Ziel + psolB buchi-safety",
-                               "Ziel + one psolB step ",
-                               "Ziel + psolQ"]
-
-    compare_complete_algorithms_LTLbenchmarks(
-        algorithms_partial_zielonka,
-        all_examples,
-        num_examples,
-        preprocess=[None] * len(labels_partial_zielonka),
-        iterations=3,
-        step=1,
-        check_solution=False,
-        plot=True,
-        path="all_ziel.pdf",
-        title="Comparison of Zielonka + partial solver on LTL benchmarks",
-        labels=labels_partial_zielonka)
 
 
 if __name__ == "__main__":
