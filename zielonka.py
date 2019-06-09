@@ -1,3 +1,4 @@
+from fatalattractors import psolC
 from fatalattractors.attractors import attractor
 import operations as ops
 import fatalattractors.psolB as psolB
@@ -241,6 +242,16 @@ def zielonka_with_psolQ(g):
     """
 
     return zielonka_with_partial(g, psolQ.psolQ)
+
+
+def zielonka_with_psolC(g):
+    """
+    Zielonka's algorithm with psolC partial solver.
+    :param g: the game to solve.
+    :return: the solution in the following format : (W_0, W_1).
+    """
+
+    return zielonka_with_partial(g, psolC.psolC)
 
 
 def zielonka_with_single_psolB_iteration(g):
