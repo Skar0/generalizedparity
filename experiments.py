@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 
+import sys
 import os
 import fnmatch
 import zielonka
@@ -22,39 +23,19 @@ def random_games(i):
     return generators.random(j, j, 1, j / 3)
 
 
-def main():
+sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.pg"),
+                      os.listdir("./examples"))
+num_examples = len(sample_files)
 
-    labels = ["psolB", "psolB Buchi-coBuchi", "psolQ", "psolC"]
-    algorithms_partial = [psolB.psolB,
-                          psolB.psolB_buchi_cobuchi,
-                          psolQ.psolQ,
-                          psolC.psolC]
 
-    print("Running experiments for all files in ./examples")
-    sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.pg"),
-                          os.listdir("./examples"))
-    num_examples = len(sample_files)
+def all_examples(i):
+    print(sample_files[i])
+    return file_handler.load_from_file(
+        os.path.join("examples", sample_files[i]))
 
-    def all_examples(i):
-        print(sample_files[i])
-        return file_handler.load_from_file(
-            os.path.join("examples", sample_files[i]))
 
-    compare_partial_algorithms(algorithms_partial,
-                               all_examples,
-                               num_examples,
-                               preprocess=[None, None, None, None, None],
-                               iterations=3,
-                               step=1,
-                               labels=labels,
-                               plot=True,
-                               path_time="all_time.pdf",
-                               path_proportion="all_prop.pdf",
-                               path_bulkprop="all_bulkprop.pdf",
-                               path_tottime="all_tottime.pdf",
-                               control_algorithm=zielonka.strong_parity_solver_no_strategies,
-                               pkl_path="all_data.pkl")
-
+def complete():
+    global num_examples
     # Zielonka + partial solvers now
     algorithms_partial_zielonka = [zielonka.strong_parity_solver_no_strategies,
                                    zielonka.zielonka_with_psol,
@@ -85,6 +66,32 @@ def main():
         path_tot="all_ziel_cumulative.pdf",
         title="Comparison of Zielonka + partial solver on LTL benchmarks",
         labels=labels_partial_zielonka)
+
+
+def partial():
+    global num_examples
+    labels = ["psolB", "psolB Buchi-coBuchi", "psolQ", "psolC"]
+    algorithms_partial = [psolB.psolB,
+                          psolB.psolB_buchi_cobuchi,
+                          psolQ.psolQ,
+                          psolC.psolC]
+
+    print("Running experiments for all files in ./examples")
+
+    compare_partial_algorithms(algorithms_partial,
+                               all_examples,
+                               num_examples,
+                               preprocess=[None, None, None, None, None],
+                               iterations=3,
+                               step=1,
+                               labels=labels,
+                               plot=True,
+                               path_time="all_time.pdf",
+                               path_proportion="all_prop.pdf",
+                               path_bulkprop="all_bulkprop.pdf",
+                               path_tottime="all_tottime.pdf",
+                               control_algorithm=zielonka.strong_parity_solver_no_strategies,
+                               pkl_path="all_data.pkl")
 
     # generalized parity games now
     labels = ["psol", "psolB", "psolQ", "psolC"]
@@ -118,4 +125,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    assert(len(sys.argv) == 2)
+    if sys.argv[1] == "complete":
+        complete()
+    elif sys.argv[1] == "partial":
+        partial()
+    else:
+        assert(False)
