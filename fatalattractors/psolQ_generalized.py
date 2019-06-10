@@ -464,7 +464,8 @@ def permissive_monotone_attractor(g, v_star, target_set, current_priorities):
                     if out[sbis] == -1:
                         # first ime, init out
                         out[sbis] = out_base[sbis_node]
-                        print("init out node " + str(sbis) + " out " + str(out[sbis]) + " out base " + str(
+                        if DEBUG_PRINT: print("init out node " + str(sbis) + " out " + str(out[sbis]) + " out base " +
+                                              str(
                             out_base[sbis_node]))
 
                     # belongs to j bar, decrement out. If out is 0, set the region accordingly
