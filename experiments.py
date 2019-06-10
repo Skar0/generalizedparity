@@ -35,8 +35,17 @@ def all_examples(i):
         os.path.join("examples", sample_files[i]))
 
 
+gen_sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.gpg"),
+                          os.listdir("./examples"))
+num_gen_examples = len(gen_sample_files)
+
+
+def all_generalized_examples(i):
+    return file_handler.load_generalized_from_file(
+        os.path.join("examples", gen_sample_files[i]))
+
+
 def complete():
-    global num_examples
     # Zielonka + partial solvers now
     algorithms_partial_zielonka = [zielonka.strong_parity_solver_no_strategies,
                                    zielonka.zielonka_with_psol,
@@ -69,19 +78,19 @@ def complete():
         labels=labels_partial_zielonka)
 
     algorithms_partial_genzielonka = [gpg.generalized_parity_solver,
-                                   genpartial.generalized_zielonka_with_psol,
-                                   genpartial.generalized_with_psolB,
-                                   genpartial.generalized_zielonka_with_psolQ]
+                                      genpartial.generalized_zielonka_with_psol,
+                                      genpartial.generalized_with_psolB,
+                                      genpartial.generalized_zielonka_with_psolQ]
 
     labels_partial_genzielonka = ["Gen Zielonka",
-                               "Gen Ziel + Gen psol",
-                               "Gen Ziel + Gen psolB",
-                               "Gen Ziel + Gen psolQ"]
+                                  "Gen Ziel + Gen psol",
+                                  "Gen Ziel + Gen psolB",
+                                  "Gen Ziel + Gen psolQ"]
 
     compare_complete_algorithms_LTLbenchmarks(
         algorithms_partial_genzielonka,
         all_generalized_examples,
-        num_examples,
+        num_gen_examples,
         preprocess=[None] * len(labels_partial_genzielonka),
         iterations=3,
         step=1,
@@ -94,7 +103,6 @@ def complete():
 
 
 def partial():
-    global num_examples
     labels = ["psolB", "psolB Buchi-coBuchi", "psolQ", "psolC"]
     algorithms_partial = [psolB.psolB,
                           psolB.psolB_buchi_cobuchi,
@@ -125,17 +133,10 @@ def partial():
                           psolQ_generalized.psolQ_generalized]
 
     print("experiments for generalized parity games: all files in ./examples")
-    sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.gpg"),
-                          os.listdir("./examples"))
-    num_examples = len(sample_files)
-
-    def all_generalized_examples(i):
-        return file_handler.load_generalized_from_file(
-            os.path.join("examples", sample_files[i]))
 
     compare_partial_algorithms(algorithms_general,
                                all_generalized_examples,
-                               num_examples,
+                               num_gen_examples,
                                preprocess=[None, None, None, None, None],
                                iterations=3,
                                step=1,
