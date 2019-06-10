@@ -261,7 +261,7 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
         plt.xlabel(u'number of nodes')
         plt.ylabel(u'time (s)')
 
-        colors = ['g.', 'r.', 'b.', 'y.', 'c.']
+        colors = ['-g.', '-r.', '-b.', '-y.', '-c.']
         # plt.yscale("log") allows logatithmic y-axis
 
         points = []
