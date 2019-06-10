@@ -6,6 +6,7 @@ import os
 import fnmatch
 import zielonka
 import generalized_parity_recursive as gpg
+import generalized_zielonka_with_partials as genpartial
 import generators
 import fatalattractors.psolB as psolB
 import fatalattractors.psolC as psolC
@@ -66,6 +67,30 @@ def complete():
         path_tot="all_ziel_cumulative.pdf",
         title="Comparison of Zielonka + partial solver on LTL benchmarks",
         labels=labels_partial_zielonka)
+
+    algorithms_partial_genzielonka = [gpg.generalized_parity_solver,
+                                   genpartial.generalized_zielonka_with_psol,
+                                   genpartial.generalized_with_psolB,
+                                   genpartial.generalized_zielonka_with_psolQ]
+
+    labels_partial_genzielonka = ["Gen Zielonka",
+                               "Gen Ziel + Gen psol",
+                               "Gen Ziel + Gen psolB",
+                               "Gen Ziel + Gen psolQ"]
+
+    compare_complete_algorithms_LTLbenchmarks(
+        algorithms_partial_genzielonka,
+        all_generalized_examples,
+        num_examples,
+        preprocess=[None] * len(labels_partial_genzielonka),
+        iterations=3,
+        step=1,
+        check_solution=False,
+        plot=True,
+        path="genziel+partials-time.pdf",
+        path_tot="genziel+partials-cumulative.pdf",
+        title="Comparison of Gen Zielonka + partial solver on LTL benchmarks",
+        labels=labels_partial_genzielonka)
 
 
 def partial():
