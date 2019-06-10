@@ -211,7 +211,7 @@ def zielonka_with_psolB(g):
     :return: the solution in the following format : (W_0, W_1).
     """
 
-    return zielonka_with_partial(g, psolB.psolB)
+    return zielonka_with_partial(g, psolB.psolB_set)
 
 
 def zielonka_with_psolB_buchi_safety(g):
