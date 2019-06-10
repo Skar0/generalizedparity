@@ -17,8 +17,13 @@ def set_timeout(t):
 def handler(signum, frame):
     raise Exception("Timeout!")
 
-def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n, preprocess=None, iterations=3, step=10, check_solution=False,
-                                plot=False, path=" ", path_tot=" ", title="plot", labels=None):
+
+def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n,
+                                              preprocess=None, iterations=3,
+                                              step=10, check_solution=False,
+                                              plot=False, path=" ",
+                                              path_tot=" ", title="plot",
+                                              labels=None):
     """
     Compares the running time of so called complete algorithms for parity or generalized parity games.
     This implementation is specific to LTL benchmarks as it sorts the points before plotting them.
@@ -44,7 +49,7 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n, preproce
     chrono = timer.Timer(verbose=False)  # Timer object
 
     # Games generated are size 5 to n using the specified step
-    for i in range(0, n , step):
+    for i in range(0, n, step):
 
         # if check_solution, we will verify the solutions are the same across the different algorithms
         if check_solution:
@@ -72,7 +77,8 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n, preproce
                         W1, W2 = algorithms[k](g_copy)  # solver call
                     except Exception:
                         failed = True
-                        print("Algorithm " + str(k) + " just timed out, benchmark "+str(i))
+                        print("Algorithm " + str(k) +
+                              " just timed out, benchmark " + str(i))
                         W1, W2 = [], []  # probably a timeout
 
                 if not failed:
@@ -113,7 +119,8 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n, preproce
 
             points = []
             for i in range(number_of_algorithms):
-                x_cop, y_cop = (list(t) for t in zip(*sorted(zip(x, y[i])))) # sorting points
+                x_cop, y_cop = (list(t) for t in
+                                zip(*sorted(zip(x, y[i]))))  # sorting points
                 points.extend(plt.plot(x_cop, y_cop, colors[i], label=labels[i]))
 
             plt.legend(loc='upper left', handles=points, prop=fontP)
@@ -131,7 +138,7 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n, preproce
                 cst = []
                 total_time = 0
                 for j in range(len(x)):
-                    total_time += y[i][j]
+                    total_time += sorted_times[i][j]
                     cst.append(total_time)
                 tot_solve_times.append(cst)
 
@@ -172,6 +179,7 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n, preproce
         plt.clf()
         plt.close()
     """
+
 
 def compare_complete_algorithms(algorithms, generator, n, preprocess=None, iterations=3, step=10, check_solution=False,
                                 plot=False, path=" ", title="plot", labels=None):
@@ -221,7 +229,13 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
             # #iterations calls to the solver are timed
             for j in range(iterations):
                 with chrono:
-                    W1, W2 = algorithms[k](g_copy)  # solver call
+                    signal.signal(signal.SIGALRM, handler)
+                    signal.alarm(TIMEOUT)
+                    try:
+                        W1, W2 = algorithms[k](g_copy)  # solver call
+                    except Exception:
+                        print("Algorithm " + str(k) + " just timed out")
+                        W1, W2 = [], []  # probably a timeout
                 recordings[k][j] = chrono.interval
 
             min_recording = min(recordings[k])
@@ -295,7 +309,6 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
 
     for i in range(0, n, step):
 
-
         # if check_solution, we will verify the solutions are the same across the different algorithms
         if control_algorithm:
             winning_player_1 = []
@@ -304,7 +317,7 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
         recordings = [[0] * iterations for t in xrange(number_of_algorithms)]
 
         g = generator(i)  # game generation
-        game_parameters.append((len(g.get_nodes()), 
+        game_parameters.append((len(g.get_nodes()),
                                 g.get_nbr_priorities()))
 
         x.append(len(g.get_nodes()))
@@ -352,7 +365,6 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
             except Exception:
                 print("The control algorithm timed out")
                 break
-
 
             for u in range(number_of_algorithms):
                 '''
@@ -460,10 +472,10 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
         plt.close()
 
 
-
 """
 # Example of usage.
-# If random games need to be generated for comparison, use a wrapper function such as 
+# If random games need to be generated for comparison, use a wrapper
+function such as
 
 import zielonka as zie
 import fatalattractors.psol as psol
@@ -488,9 +500,11 @@ compare_complete_algorithms(algorithms_complete, gen, 500, preprocess=[None, Non
 
 algorithms_partial = [psol.psol, psolB.psolB, psolB.psolB_buchi_safety, psolQ.psolQ, psolQ.psolQ_buchi]
 
-compare_partial_algorithms(algorithms_partial, gen, 500, preprocess=[None, None, None, None, None], iterations=3, step=10,
-                           control_algorithm=zie.strong_parity_solver_no_strategies, plot=True,
-                           path_time="compare_partials_time.pdf", path_proportion="compare_partials_proportion.pdf",
-                           title="Comparison of partial solvers for parity games",
-                           labels=["psol", " psolB", " psolB Buchi-safety", "psolQ", "psolQ vero"])
+compare_partial_algorithms(algorithms_partial, gen, 500, preprocess=[None,
+    None, None, None, None], iterations=3, step=10,
+    control_algorithm=zie.strong_parity_solver_no_strategies, plot=True,
+    path_time="compare_partials_time.pdf",
+    path_proportion="compare_partials_proportion.pdf", title="Comparison of
+    partial solvers for parity games", labels=["psol", " psolB", " psolB
+    Buchi-safety", "psolQ", "psolQ vero"])
 """
