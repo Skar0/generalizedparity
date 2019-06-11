@@ -6,7 +6,7 @@ import operations as ops
 import timer
 
 
-TIMEOUT = 300
+TIMEOUT = 60
 
 
 def set_timeout(t):
@@ -23,7 +23,7 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n,
                                               step=10, check_solution=False,
                                               plot=False, path=" ",
                                               path_tot=" ", title="plot",
-                                              labels=None):
+                                              labels=None, pkl_path=""):
     """
     Compares the running time of so called complete algorithms for parity or generalized parity games.
     This implementation is specific to LTL benchmarks as it sorts the points before plotting them.
@@ -45,6 +45,7 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n,
 
     y = [[] for z in xrange(number_of_algorithms)]
     x = []
+    game_parameters = []
 
     chrono = timer.Timer(verbose=False)  # Timer object
 
@@ -60,6 +61,9 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n,
 
         g = generator(i)  # game generation
         x.append(len(g.get_nodes()))
+        game_parameters.append((g.name,
+                                len(g.get_nodes()),
+                                g.get_nbr_priorities()))
 
         for k in range(number_of_algorithms):
             g_copy = copy.deepcopy(g)
@@ -105,62 +109,68 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n,
                 assert (ops.are_lists_equal(winning_player_1[u], winning_player_1[u + 1]))
                 assert (ops.are_lists_equal(winning_player_2[u], winning_player_2[u + 1]))
 
-        if plot:
-            plt.grid(True)
-            plt.title(title)
-            plt.xlabel(u'number of nodes')
-            plt.ylabel(u'time (s)')
+    # just in case, we also save a pickle file
+    if pkl_path:
+        xy_pkl = open(pkl_path, 'wb')
+        pickle.dump((game_parameters, x, y), xy_pkl)
+        xy_pkl.close()
 
-            colors = ['-g.', '-r.', '-b.', '-y.', '-c.', '-k.', '-m.']
-            plt.xscale("log")
-            plt.yscale("log")
-            from matplotlib.font_manager import FontProperties
+    if plot:
+        plt.grid(True)
+        plt.title(title)
+        plt.xlabel(u'number of nodes')
+        plt.ylabel(u'time (s)')
 
-            fontP = FontProperties()
-            fontP.set_size('small')
+        colors = ['-g.', '-r.', '-b.', '-y.', '-c.', '-k.', '-m.']
+        plt.xscale("log")
+        plt.yscale("log")
+        from matplotlib.font_manager import FontProperties
 
-            points = []
-            for i in range(number_of_algorithms):
-                x_cop, y_cop = (list(t) for t in
-                                zip(*sorted(zip(x, y[i]))))  # sorting points
-                points.extend(plt.plot(x_cop, y_cop, colors[i], label=labels[i]))
+        fontP = FontProperties()
+        fontP.set_size('small')
 
-            plt.legend(loc='upper left', handles=points, prop=fontP)
-            plt.savefig(path, bbox_inches='tight')
-            plt.clf()
-            plt.close()
+        points = []
+        for i in range(number_of_algorithms):
+            x_cop, y_cop = (list(t) for t in
+                            zip(*sorted(zip(x, y[i]))))  # sorting points
+            points.extend(plt.plot(x_cop, y_cop, colors[i], label=labels[i]))
 
-            # we need to compute how many benchmarks there are
-            bench_count = range(1, len(x) + 1)
-            # now we need to sort the running times of the algorithms in increasing order
-            # and add them
-            sorted_times = [sorted(y[i]) for i in range(len(y))]
-            tot_solve_times = []
-            for i in range(len(y)):
-                cst = []
-                total_time = 0
-                for j in range(len(x)):
-                    total_time += sorted_times[i][j]
-                    cst.append(total_time)
-                tot_solve_times.append(cst)
+        plt.legend(loc='upper left', handles=points, prop=fontP)
+        plt.savefig(path, bbox_inches='tight')
+        plt.clf()
+        plt.close()
 
-            plt.grid(True)
-            plt.title("Cumulative time graph")
-            plt.xlabel(u'no. of benchmarks')
-            plt.ylabel(u'total time spent')
-            plt.yscale("log")  # allows logatithmic y-axis
+        # we need to compute how many benchmarks there are
+        bench_count = range(1, len(x) + 1)
+        # now we need to sort the running times of the algorithms in increasing order
+        # and add them
+        sorted_times = [sorted(y[i]) for i in range(len(y))]
+        tot_solve_times = []
+        for i in range(len(y)):
+            cst = []
+            total_time = 0
+            for j in range(len(x)):
+                total_time += sorted_times[i][j]
+                cst.append(total_time)
+            tot_solve_times.append(cst)
 
-            colors = ['-g.', '-r.', '-b.', '-y.', '-c.', '-k.', '-m.']
+        plt.grid(True)
+        plt.title("Cumulative time graph")
+        plt.xlabel(u'no. of benchmarks')
+        plt.ylabel(u'total time spent')
+        plt.yscale("log")  # allows logatithmic y-axis
 
-            points = []
-            for i in range(number_of_algorithms):
-                points.extend(plt.plot(bench_count, tot_solve_times[i],
-                                       colors[i], label=labels[i]))
+        colors = ['-g.', '-r.', '-b.', '-y.', '-c.', '-k.', '-m.']
 
-            plt.legend(loc='lower right', handles=points)
-            plt.savefig(path_tot, bbox_inches='tight')
-            plt.clf()
-            plt.close()
+        points = []
+        for i in range(number_of_algorithms):
+            points.extend(plt.plot(bench_count, tot_solve_times[i],
+                                   colors[i], label=labels[i]))
+
+        plt.legend(loc='lower right', handles=points)
+        plt.savefig(path_tot, bbox_inches='tight')
+        plt.clf()
+        plt.close()
 
     """
     if plot:
@@ -322,7 +332,8 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
         recordings = [[0] * iterations for t in xrange(number_of_algorithms)]
 
         g = generator(i)  # game generation
-        game_parameters.append((len(g.get_nodes()),
+        game_parameters.append((g.name,
+                                len(g.get_nodes()),
                                 g.get_nbr_priorities()))
 
         x.append(len(g.get_nodes()))

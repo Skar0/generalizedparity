@@ -31,9 +31,10 @@ num_examples = len(sample_files)
 
 
 def all_examples(i):
-    print(sample_files[i])
-    return file_handler.load_from_file(
+    g = file_handler.load_from_file(
         os.path.join("examples", sample_files[i]))
+    g.name = sample_files[i]
+    return g
 
 
 gen_sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.gpg"),
@@ -42,8 +43,10 @@ num_gen_examples = len(gen_sample_files)
 
 
 def all_generalized_examples(i):
-    return file_handler.load_generalized_from_file(
+    g = file_handler.load_generalized_from_file(
         os.path.join("examples", gen_sample_files[i]))
+    g.name = gen_sample_files[i]
+    return g
 
 
 def complete():
@@ -77,6 +80,7 @@ def complete():
         path="all_ziel.pdf",
         path_tot="all_ziel_cumulative.pdf",
         title="Comparison of Zielonka + partial solver on LTL benchmarks",
+        pkl_path="ziel_combo.pkl",
         labels=labels_partial_zielonka)
 
     algorithms_partial_genzielonka =\
@@ -102,6 +106,7 @@ def complete():
         path="genziel+partials-time.pdf",
         path_tot="genziel+partials-cumulative.pdf",
         title="Comparison of Gen Zielonka + partial solver on LTL benchmarks",
+        pkl_path="genziel_combo.pkl",
         labels=labels_partial_genzielonka)
 
 
@@ -160,9 +165,10 @@ def fatal_abo():
     num_abo_examples = len(abo_sample_files)
 
     def abo_examples(i):
-        print(abo_sample_files[i])
-        return file_handler.load_from_file(
+        g = file_handler.load_from_file(
             os.path.join("hardexamples", abo_sample_files[i]))
+        g.name = abo_sample_files[i]
+        return g
 
     labels = ["psolB", "psolB Buchi-coBuchi", "psolQ", "psolC"]
     algorithms_partial = [psolB.psolB,
