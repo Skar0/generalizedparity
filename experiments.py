@@ -150,11 +150,79 @@ def partial():
                                pkl_path="allgen_data.pkl")
 
 
+def fatal_abo():
+    pass
+    labels = ["psolB", "psolB Buchi-coBuchi", "psolQ", "psolC"]
+    algorithms_partial = [psolB.psolB,
+                          psolB.psolB_buchi_cobuchi,
+                          psolQ.psolQ,
+                          psolC.psolC]
+
+    print("Running experiments for strategy improvement")
+    # 2**10, 2**11
+    print("Running experiments for recursive ladder")
+    # 2**12, 2**13
+    print("Running experiments for jurdzinski")
+    # (10, 10 x 2**7)
+    # (10, 10 x 2**8)
+    # (10 x 2**7, 10)
+    # (10 x 2**8, 10)
+    # (10 x 2**3, ..)
+    # (10 x 2**4, ..)
+
+    compare_partial_algorithms(algorithms_partial,
+                               abo_examples,
+                               num_abo_examples,
+                               preprocess=[None, None, None, None, None],
+                               iterations=3,
+                               step=1,
+                               labels=labels,
+                               plot=True,
+                               path_time="abo_time.pdf",
+                               path_proportion="abo_prop.pdf",
+                               path_bulkprop="abo_bulkprop.pdf",
+                               path_tottime="abo_tottime.pdf",
+                               control_algorithm=zielonka.strong_parity_solver_no_strategies,
+                               pkl_path="abo_data.pkl")
+
+    algorithms_partial_zielonka = [zielonka.strong_parity_solver_no_strategies,
+                                   zielonka.zielonka_with_psol,
+                                   zielonka.zielonka_with_psolB,
+                                   zielonka.zielonka_with_psolB_buchi_safety,
+                                   zielonka.zielonka_with_single_psolB_iteration,
+                                   zielonka.zielonka_with_psolQ,
+                                   zielonka.zielonka_with_psolC]
+
+    labels_partial_zielonka = ["Zielonka",
+                               "Ziel + psol",
+                               "Ziel + psolB",
+                               "Ziel + psolB buchi-safety",
+                               "Ziel + one psolB step ",
+                               "Ziel + psolQ",
+                               "Ziel + psolC"]
+
+    compare_complete_algorithms_LTLbenchmarks(
+        algorithms_partial_zielonka,
+        abo_examples,
+        num_abo_examples,
+        preprocess=[None] * len(labels_partial_zielonka),
+        iterations=3,
+        step=1,
+        check_solution=False,
+        plot=True,
+        path="abo_ziel.pdf",
+        path_tot="abo_ziel_cumulative.pdf",
+        title="Comparison of Zielonka + partial solver on LTL benchmarks",
+        labels=labels_partial_zielonka)
+
+
 if __name__ == "__main__":
     assert(len(sys.argv) == 2)
     if sys.argv[1] == "complete":
         complete()
     elif sys.argv[1] == "partial":
         partial()
+    elif sys.argv[1] == "fatal-abo":
+        fatal_abo()
     else:
         assert(False)

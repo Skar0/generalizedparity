@@ -6,7 +6,7 @@ import operations as ops
 import timer
 
 
-TIMEOUT = 600
+TIMEOUT = 300
 
 
 def set_timeout(t):
@@ -80,6 +80,8 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n,
                         print("Algorithm " + str(k) +
                               " just timed out, benchmark " + str(i))
                         W1, W2 = [], []  # probably a timeout
+                    finally:
+                        signal.alarm(0)
 
                 if not failed:
                     recordings[k][j] = chrono.interval
@@ -236,6 +238,9 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
                     except Exception:
                         print("Algorithm " + str(k) + " just timed out")
                         W1, W2 = [], []  # probably a timeout
+                    finally:
+                        signal.alarm(0)
+
                 recordings[k][j] = chrono.interval
 
             min_recording = min(recordings[k])
@@ -340,6 +345,8 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
                     except Exception:
                         print("Algorithm " + str(k) + " just timed out")
                         rest, W1, W2 = g, [], []  # probably a timeout
+                    finally:
+                        signal.alarm(0)
 
                 recordings[k][j] = chrono.interval
 
@@ -362,20 +369,20 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
             signal.alarm(TIMEOUT)
             try:
                 expected_1, expected_2 = control_algorithm(g_copy)
+                for u in range(number_of_algorithms):
+                    '''
+                    print("CURRENT ALGORITHM " + str(u))
+                    print(winning_player_2[u])
+                    print(expected_2)
+                    print(winning_player_1[u])
+                    print(expected_1)
+                    '''
+                    assert (set(winning_player_2[u]).issubset(expected_2))
+                    assert (set(winning_player_1[u]).issubset(expected_1))
             except Exception:
                 print("The control algorithm timed out")
-                break
-
-            for u in range(number_of_algorithms):
-                '''
-                print("CURRENT ALGORITHM " + str(u))
-                print(winning_player_2[u])
-                print(expected_2)
-                print(winning_player_1[u])
-                print(expected_1)
-                '''
-                assert (set(winning_player_2[u]).issubset(expected_2))
-                assert (set(winning_player_1[u]).issubset(expected_1))
+            finally:
+                signal.alarm(0)
 
     # just in case, we also save a pickle file
     if pkl_path:
