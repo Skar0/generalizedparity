@@ -15,7 +15,8 @@ import fatalattractors.psol_generalized as psol_generalized
 import fatalattractors.psolB_generalized as psolB_generalized
 import fatalattractors.psolQ_generalized as psolQ_generalized
 import file_handler
-from benchmarks.compare_algorithms import compare_partial_algorithms, compare_complete_algorithms_LTLbenchmarks
+from benchmarks.compare_algorithms import compare_partial_algorithms,\
+    compare_complete_algorithms_LTLbenchmarks
 
 
 def random_games(i):
@@ -47,13 +48,14 @@ def all_generalized_examples(i):
 
 def complete():
     # Zielonka + partial solvers now
-    algorithms_partial_zielonka = [zielonka.strong_parity_solver_no_strategies,
-                                   zielonka.zielonka_with_psol,
-                                   zielonka.zielonka_with_psolB,
-                                   zielonka.zielonka_with_psolB_buchi_safety,
-                                   zielonka.zielonka_with_single_psolB_iteration,
-                                   zielonka.zielonka_with_psolQ,
-                                   zielonka.zielonka_with_psolC]
+    algorithms_partial_zielonka =\
+        [zielonka.strong_parity_solver_no_strategies,
+         zielonka.zielonka_with_psol,
+         zielonka.zielonka_with_psolB,
+         zielonka.zielonka_with_psolB_buchi_safety,
+         zielonka.zielonka_with_single_psolB_iteration,
+         zielonka.zielonka_with_psolQ,
+         zielonka.zielonka_with_psolC]
 
     labels_partial_zielonka = ["Zielonka",
                                "Ziel + psol",
@@ -77,10 +79,11 @@ def complete():
         title="Comparison of Zielonka + partial solver on LTL benchmarks",
         labels=labels_partial_zielonka)
 
-    algorithms_partial_genzielonka = [gpg.generalized_parity_solver,
-                                      genpartial.generalized_zielonka_with_psol,
-                                      genpartial.generalized_with_psolB,
-                                      genpartial.generalized_zielonka_with_psolQ]
+    algorithms_partial_genzielonka =\
+        [gpg.generalized_parity_solver,
+         genpartial.generalized_zielonka_with_psol,
+         genpartial.generalized_with_psolB,
+         genpartial.generalized_zielonka_with_psolQ]
 
     labels_partial_genzielonka = ["Gen Zielonka",
                                   "Gen Ziel + Gen psol",
@@ -111,20 +114,21 @@ def partial():
 
     print("Running experiments for all files in ./examples")
 
-    compare_partial_algorithms(algorithms_partial,
-                               all_examples,
-                               num_examples,
-                               preprocess=[None, None, None, None, None],
-                               iterations=3,
-                               step=1,
-                               labels=labels,
-                               plot=True,
-                               path_time="all_time.pdf",
-                               path_proportion="all_prop.pdf",
-                               path_bulkprop="all_bulkprop.pdf",
-                               path_tottime="all_tottime.pdf",
-                               control_algorithm=zielonka.strong_parity_solver_no_strategies,
-                               pkl_path="all_data.pkl")
+    compare_partial_algorithms(
+        algorithms_partial,
+        all_examples,
+        num_examples,
+        preprocess=[None, None, None, None, None],
+        iterations=3,
+        step=1,
+        labels=labels,
+        plot=True,
+        path_time="all_time.pdf",
+        path_proportion="all_prop.pdf",
+        path_bulkprop="all_bulkprop.pdf",
+        path_tottime="all_tottime.pdf",
+        control_algorithm=zielonka.strong_parity_solver_no_strategies,
+        pkl_path="all_data.pkl")
 
     # generalized parity games now
     labels = ["psol", "psolB", "psolQ", "psolC"]
@@ -151,47 +155,47 @@ def partial():
 
 
 def fatal_abo():
-    pass
+    abo_sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.pg"),
+                              os.listdir("./hardexamples"))
+    num_abo_examples = len(abo_sample_files)
+
+    def abo_examples(i):
+        print(abo_sample_files[i])
+        return file_handler.load_from_file(
+            os.path.join("hardexamples", abo_sample_files[i]))
+
     labels = ["psolB", "psolB Buchi-coBuchi", "psolQ", "psolC"]
     algorithms_partial = [psolB.psolB,
                           psolB.psolB_buchi_cobuchi,
                           psolQ.psolQ,
                           psolC.psolC]
 
-    print("Running experiments for strategy improvement")
-    # 2**10, 2**11
-    print("Running experiments for recursive ladder")
-    # 2**12, 2**13
-    print("Running experiments for jurdzinski")
-    # (10, 10 x 2**7)
-    # (10, 10 x 2**8)
-    # (10 x 2**7, 10)
-    # (10 x 2**8, 10)
-    # (10 x 2**3, ..)
-    # (10 x 2**4, ..)
+    print("Running experiments for PGSolver hard examples")
 
-    compare_partial_algorithms(algorithms_partial,
-                               abo_examples,
-                               num_abo_examples,
-                               preprocess=[None, None, None, None, None],
-                               iterations=3,
-                               step=1,
-                               labels=labels,
-                               plot=True,
-                               path_time="abo_time.pdf",
-                               path_proportion="abo_prop.pdf",
-                               path_bulkprop="abo_bulkprop.pdf",
-                               path_tottime="abo_tottime.pdf",
-                               control_algorithm=zielonka.strong_parity_solver_no_strategies,
-                               pkl_path="abo_data.pkl")
+    compare_partial_algorithms(
+        algorithms_partial,
+        abo_examples,
+        num_abo_examples,
+        preprocess=[None, None, None, None, None],
+        iterations=3,
+        step=1,
+        labels=labels,
+        plot=True,
+        path_time="abo_time.pdf",
+        path_proportion="abo_prop.pdf",
+        path_bulkprop="abo_bulkprop.pdf",
+        path_tottime="abo_tottime.pdf",
+        control_algorithm=zielonka.strong_parity_solver_no_strategies,
+        pkl_path="abo_data.pkl")
 
-    algorithms_partial_zielonka = [zielonka.strong_parity_solver_no_strategies,
-                                   zielonka.zielonka_with_psol,
-                                   zielonka.zielonka_with_psolB,
-                                   zielonka.zielonka_with_psolB_buchi_safety,
-                                   zielonka.zielonka_with_single_psolB_iteration,
-                                   zielonka.zielonka_with_psolQ,
-                                   zielonka.zielonka_with_psolC]
+    algorithms_partial_zielonka =\
+        [zielonka.strong_parity_solver_no_strategies,
+         zielonka.zielonka_with_psol,
+         zielonka.zielonka_with_psolB,
+         zielonka.zielonka_with_psolB_buchi_safety,
+         zielonka.zielonka_with_single_psolB_iteration,
+         zielonka.zielonka_with_psolQ,
+         zielonka.zielonka_with_psolC]
 
     labels_partial_zielonka = ["Zielonka",
                                "Ziel + psol",
