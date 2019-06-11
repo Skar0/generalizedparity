@@ -192,7 +192,7 @@ def fatal_abo():
         path_bulkprop="abo_bulkprop.pdf",
         path_tottime="abo_tottime.pdf",
         control_algorithm=zielonka.strong_parity_solver_no_strategies,
-        pkl_path="abo_data.pkl")
+        pkl_path="abo_part.pkl")
 
     algorithms_partial_zielonka =\
         [zielonka.strong_parity_solver_no_strategies,
@@ -223,7 +223,8 @@ def fatal_abo():
         path="abo_ziel.pdf",
         path_tot="abo_ziel_cumulative.pdf",
         title="Comparison of Zielonka + partial solver on LTL benchmarks",
-        labels=labels_partial_zielonka)
+        labels=labels_partial_zielonka,
+        pkl_path="abo_ziel.pkl")
 
 
 if __name__ == "__main__":
