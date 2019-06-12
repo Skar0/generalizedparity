@@ -13,6 +13,7 @@ import fatalattractors.psolC as psolC
 import fatalattractors.psolQ as psolQ
 import fatalattractors.psolB_generalized as psolB_generalized
 import fatalattractors.psolQ_generalized as psolQ_generalized
+import fatalattractors.psolC_generalized as psolC_generalized
 import file_handler
 from benchmarks.compare_algorithms import compare_partial_algorithms,\
     compare_complete_algorithms_LTLbenchmarks
@@ -130,7 +131,8 @@ def partial():
     # generalized parity games now
     labels = ["psolB", "psolQ", "psolC"]
     algorithms_general = [psolB_generalized.psolB_generalized_inline,
-                          psolQ_generalized.psolQ_generalized]
+                          psolQ_generalized.psolQ_generalized,
+                          psolC_generalized.psolC_generalized]
 
     print("experiments for generalized parity games: all files in ./examples")
 
