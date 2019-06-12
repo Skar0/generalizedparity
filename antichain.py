@@ -128,6 +128,12 @@ class Antichain(object):
         for element in self.incomparable_elements:
             if not antichain.contains(element):
                 return False
+        """ TODO
+        for element in antichain.incomparable_elements:
+            if not self.contains(element):
+                return False
+        """
+
         return True
 
     def __repr__(self):
