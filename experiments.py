@@ -11,7 +11,6 @@ import generators
 import fatalattractors.psolB as psolB
 import fatalattractors.psolC as psolC
 import fatalattractors.psolQ as psolQ
-import fatalattractors.psol_generalized as psol_generalized
 import fatalattractors.psolB_generalized as psolB_generalized
 import fatalattractors.psolQ_generalized as psolQ_generalized
 import file_handler
@@ -46,6 +45,7 @@ def all_generalized_examples(i):
     g = file_handler.load_generalized_from_file(
         os.path.join("examples", gen_sample_files[i]))
     g.name = gen_sample_files[i]
+    assert(len(g.get_nbr_priorities()) > 1)
     return g
 
 
@@ -53,18 +53,12 @@ def complete():
     # Zielonka + partial solvers now
     algorithms_partial_zielonka =\
         [zielonka.strong_parity_solver_no_strategies,
-         zielonka.zielonka_with_psol,
          zielonka.zielonka_with_psolB,
-         zielonka.zielonka_with_psolB_buchi_safety,
-         zielonka.zielonka_with_single_psolB_iteration,
          zielonka.zielonka_with_psolQ,
          zielonka.zielonka_with_psolC]
 
     labels_partial_zielonka = ["Zielonka",
-                               "Ziel + psol",
                                "Ziel + psolB",
-                               "Ziel + psolB buchi-safety",
-                               "Ziel + one psolB step ",
                                "Ziel + psolQ",
                                "Ziel + psolC"]
 
@@ -85,14 +79,13 @@ def complete():
 
     algorithms_partial_genzielonka =\
         [gpg.generalized_parity_solver,
-         genpartial.generalized_zielonka_with_psol,
          genpartial.generalized_with_psolB,
          genpartial.generalized_zielonka_with_psolQ]
 
     labels_partial_genzielonka = ["Gen Zielonka",
-                                  "Gen Ziel + Gen psol",
                                   "Gen Ziel + Gen psolB",
-                                  "Gen Ziel + Gen psolQ"]
+                                  "Gen Ziel + Gen psolQ",
+                                  "Gen Ziel + Gen psolC"]
 
     compare_complete_algorithms_LTLbenchmarks(
         algorithms_partial_genzielonka,
@@ -111,9 +104,8 @@ def complete():
 
 
 def partial():
-    labels = ["psolB", "psolB Buchi-coBuchi", "psolQ", "psolC"]
-    algorithms_partial = [psolB.psolB,
-                          psolB.psolB_buchi_cobuchi,
+    labels = ["psolB", "psolQ", "psolC"]
+    algorithms_partial = [psolB.psolB_set,
                           psolQ.psolQ,
                           psolC.psolC]
 
@@ -136,9 +128,8 @@ def partial():
         pkl_path="all_data.pkl")
 
     # generalized parity games now
-    labels = ["psol", "psolB", "psolQ", "psolC"]
-    algorithms_general = [psol_generalized.psol_generalized,
-                          psolB_generalized.psolB_generalized_inline,
+    labels = ["psolB", "psolQ", "psolC"]
+    algorithms_general = [psolB_generalized.psolB_generalized_inline,
                           psolQ_generalized.psolQ_generalized]
 
     print("experiments for generalized parity games: all files in ./examples")
@@ -170,9 +161,8 @@ def fatal_abo():
         g.name = abo_sample_files[i]
         return g
 
-    labels = ["psolB", "psolB Buchi-coBuchi", "psolQ", "psolC"]
-    algorithms_partial = [psolB.psolB,
-                          psolB.psolB_buchi_cobuchi,
+    labels = ["psolB", "psolQ", "psolC"]
+    algorithms_partial = [psolB.psolB_set,
                           psolQ.psolQ,
                           psolC.psolC]
 
@@ -196,18 +186,12 @@ def fatal_abo():
 
     algorithms_partial_zielonka =\
         [zielonka.strong_parity_solver_no_strategies,
-         zielonka.zielonka_with_psol,
          zielonka.zielonka_with_psolB,
-         zielonka.zielonka_with_psolB_buchi_safety,
-         zielonka.zielonka_with_single_psolB_iteration,
          zielonka.zielonka_with_psolQ,
          zielonka.zielonka_with_psolC]
 
     labels_partial_zielonka = ["Zielonka",
-                               "Ziel + psol",
                                "Ziel + psolB",
-                               "Ziel + psolB buchi-safety",
-                               "Ziel + one psolB step ",
                                "Ziel + psolQ",
                                "Ziel + psolC"]
 

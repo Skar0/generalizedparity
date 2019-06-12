@@ -6,7 +6,7 @@ import operations as ops
 import timer
 
 
-TIMEOUT = 1200
+TIMEOUT = 60
 
 
 def set_timeout(t):
