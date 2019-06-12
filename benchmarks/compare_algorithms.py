@@ -73,28 +73,28 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n,
 
             # #iterations calls to the solver are timed
             for j in range(iterations):
-                failed = False
+                # failed = False
                 with chrono:
                     signal.signal(signal.SIGALRM, handler)
                     signal.alarm(TIMEOUT)
                     try:
                         W1, W2 = algorithms[k](g_copy)  # solver call
                     except Exception:
-                        failed = True
+                        # failed = True
                         print("Algorithm " + str(k) +
                               " just timed out, benchmark " + str(i))
                         W1, W2 = [], []  # probably a timeout
                     finally:
                         signal.alarm(0)
 
-                if not failed:
-                    recordings[k][j] = chrono.interval
+                # if not failed:
+                    # recordings[k][j] = chrono.interval
 
-            if min(recordings[k]) == 0:
-                y[k].append(TIMEOUT)  # get the minimum out of #iterations recordings
-            else:
-                min_recording = min(recordings[k])
-                y[k].append(min_recording)  # get the minimum out of #iterations recordings
+            # if min(recordings[k]) == 0:
+            #     y[k].append(TIMEOUT)  # get the minimum out of #iterations recordings
+            # else:
+            min_recording = min(recordings[k])
+            y[k].append(min_recording)  # get the minimum out of #iterations recordings
 
             # algorithms should not modify the original game arena
             assert (len(g.get_nodes()) == len(g_copy.get_nodes()))
