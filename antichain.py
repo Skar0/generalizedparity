@@ -104,6 +104,19 @@ class Antichain(object):
                 return True
         return False
 
+    def contains_element(self, element):
+        """
+        Check whether the antichain contains the element in its closure i.e. element is smaller than some element
+        in the antichain.
+        :param element:
+        :return:
+        """
+
+        for i in self.incomparable_elements:
+            if self.comparator(element,i):
+                return True
+        return False
+
     def compare(self, antichain):
         """
         Compare two antichains to check if they are identical.
