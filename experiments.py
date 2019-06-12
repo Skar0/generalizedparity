@@ -81,7 +81,8 @@ def complete():
     algorithms_partial_genzielonka =\
         [gpg.generalized_parity_solver,
          genpartial.generalized_with_psolB,
-         genpartial.generalized_zielonka_with_psolQ]
+         genpartial.generalized_zielonka_with_psolQ,
+         genpartial.generalized_zielonka_with_psolC]
 
     labels_partial_genzielonka = ["Gen Zielonka",
                                   "Gen Ziel + Gen psolB",
