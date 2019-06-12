@@ -5,17 +5,24 @@ def timetable(game_parameters, x, y, algorithms, filename):
     f = open(filename, "w")
     f.write("benchmark name; number of vertices; number of priorities;")
     f.write(";".join(algorithms) + "\n")
+
+    def to_string(x):
+        if abs(x - 60.0) <= 2.0:
+            return "T/O"
+        else:
+            return format(x, "09.5f").replace(".", ",")
+
     for j in range(len(y[0])):
         (name, n, prts) = game_parameters[j]
         f.write(name + ";")
         f.write(str(n) + ";")
         f.write(str(prts) + ";")
-        f.write(";".join([format(y[i][j], "07,3f") for i in range(len(y))]))
+        f.write(";".join([to_string(y[i][j]) for i in range(len(y))]))
         f.write("\n")
     f.close()
 
 
-def proportiontable(game_parameters, x, z, algorithms, filename):
+def proportiontable(game_parameters, x, y, z, algorithms, filename):
     f = open(filename, "w")
     f.write("benchmark name; number of vertices; number of priorities;")
     f.write(";".join(algorithms) + "\n")
@@ -24,7 +31,8 @@ def proportiontable(game_parameters, x, z, algorithms, filename):
         f.write(name + ";")
         f.write(str(n) + ";")
         f.write(str(prts) + ";")
-        f.write(";".join([format(z[i][j], "06,2f") for i in range(len(z))]))
+        f.write(";".join([format(z[i][j], "06.2f").replace(".", ",")
+                          for i in range(len(z))]))
         f.write("\n")
     f.close()
 
