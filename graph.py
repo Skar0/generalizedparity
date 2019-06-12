@@ -56,6 +56,13 @@ class Graph(object):
     def get_sorted_priorities(self):
         return sorted(set([k[1] for k in self.nodes.itervalues()]))
 
+    def get_nbr_priorities_func(self, func):
+        return len(set([k[func] for k in self.nodes.itervalues()]))
+
+    def get_sorted_priorities_func(self, func):
+        return sorted(set([k[func] for k in self.nodes.itervalues()]))
+
+
     def get_node_priority(self, node):
         """
         :param node: a node id
