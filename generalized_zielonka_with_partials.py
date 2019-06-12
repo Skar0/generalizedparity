@@ -3,6 +3,7 @@ import copy
 import operations as ops
 import fatalattractors.psolB_generalized as psolB_gen
 import fatalattractors.psolQ_generalized as psolQ_gen
+import fatalattractors.psolC_generalized as psolC_gen
 import fatalattractors.psol_generalized as psol_gen
 import fatalattractors.attractors as reachability
 import generalized_parity_recursive as regular_generalized_parity
@@ -258,3 +259,13 @@ def generalized_zielonka_with_psolQ(g):
     """
 
     return generalized_parity_solver_with_partial(g, psolQ_gen.psolQ_generalized)
+
+
+def generalized_zielonka_with_psolC(g):
+    """
+    Zielonka's algorithm with psolC partial solver.
+    :param g: the game to solve.
+    :return: the solution in the following format : (W_0, W_1).
+    """
+
+    return generalized_parity_solver_with_partial(g, psolC_gen.psolC_generalized)
