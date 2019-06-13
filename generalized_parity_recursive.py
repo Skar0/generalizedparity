@@ -135,5 +135,5 @@ def generalized_parity_solver(g):
     return disj_parity_win(transformed, maxValues, nbrFunctions, 0)
 
 
-g = io.load_generalized_from_file("examples/seed_72-10,4,10,1,10.txt")
-W1, W2 = generalized_parity_solver(g)
+# g = io.load_generalized_from_file("examples/seed_72-10,4,10,1,10.txt")
+# W1, W2 = generalized_parity_solver(g)
