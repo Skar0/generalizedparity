@@ -217,6 +217,7 @@ def fatal_abo():
 
 if __name__ == "__main__":
     assert(len(sys.argv) == 2)
+    sys.setrecursionlimit(100000)
     if sys.argv[1] == "complete":
         complete()
     elif sys.argv[1] == "partial":
