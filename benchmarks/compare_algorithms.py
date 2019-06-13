@@ -67,6 +67,7 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n,
 
         g = generator(i)  # game generation
         x.append(len(g.get_nodes()))
+        print("Experiments on benchmark no. " + str(i))
         game_parameters.append((g.name,
                                 len(g.get_nodes()),
                                 g.get_nbr_priorities()))
