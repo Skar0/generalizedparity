@@ -16,7 +16,7 @@ import fatalattractors.psolQ_generalized as psolQ_generalized
 import fatalattractors.psolC_generalized as psolC_generalized
 import file_handler
 from benchmarks.compare_algorithms import compare_partial_algorithms,\
-    compare_complete_algorithms_LTLbenchmarks
+    compare_complete_algorithms_LTLbenchmarks, set_timeout
 
 
 def random_games(i):
@@ -154,6 +154,7 @@ def partial():
 
 
 def fatal_abo():
+    set_timeout(1200)
     abo_sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.pg"),
                               os.listdir("./hardexamples"))
     num_abo_examples = len(abo_sample_files)
