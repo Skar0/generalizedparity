@@ -126,7 +126,7 @@ def partial():
         path_proportion="all_prop.pdf",
         path_bulkprop="all_bulkprop.pdf",
         path_tottime="all_tottime.pdf",
-        control_algorithm=zielonka.strong_parity_solver_no_strategies,
+        # control_algorithm=zielonka.strong_parity_solver_no_strategies,
         pkl_path="all_data.pkl")
 
     # generalized parity games now
@@ -149,7 +149,7 @@ def partial():
                                path_proportion="allgen_prop.pdf",
                                path_bulkprop="allgen_bulkprop.pdf",
                                path_tottime="allgen_tottime.pdf",
-                               control_algorithm=gpg.generalized_parity_solver,
+                               # control_algorithm=gpg.generalized_parity_solver,
                                pkl_path="allgen_data.pkl")
 
 
@@ -185,7 +185,7 @@ def fatal_abo():
         path_proportion="abo_prop.pdf",
         path_bulkprop="abo_bulkprop.pdf",
         path_tottime="abo_tottime.pdf",
-        control_algorithm=zielonka.strong_parity_solver_no_strategies,
+        # control_algorithm=zielonka.strong_parity_solver_no_strategies,
         pkl_path="abo_part.pkl")
 
     algorithms_partial_zielonka =\
