@@ -348,6 +348,13 @@ def psolB_generalized_inline(g, W1, W2):
         # TODO we transform into set to remove duplicate, might check itertools, ordered dicts and heaps also
         priorities[func] = sorted(set(priorities[func]), reverse=True)  # change into set to remove duplicates and sort
         even_priorities[func] = filter(lambda x: x % 2 == 0, priorities[func])
+
+        # if there are no even priorities according to one of the functions, the game is completely won by player 1
+        # return empty game and all nodes added to W2
+        if len(even_priorities[func]) == 0:
+            W2.extend(g.nodes.keys())
+            return Graph(), W1, W2
+
         sizes[func] = len(priorities[func])
         even_sizes[func] = len(even_priorities[func])
 
@@ -402,7 +409,7 @@ def psolB_generalized_inline(g, W1, W2):
 
                     MA, rest = monotone_attractor(g, target_set, odd_priority, i + 1)
 
-                    if DEBUG_PRINT: print(" MA " + str(MA) + " Player " + str(g.get_node_player(target_set[0])) + "\n")
+                    if DEBUG_PRINT: print(" MA " + str(MA) + " Player " + str(1) + "\n")
 
                     if target_set.issubset(MA):
 
@@ -493,5 +500,7 @@ def psolB_generalized_inline(g, W1, W2):
 import file_handler as io
 g = io.load_generalized_from_file("../examples/example_10.txt")
 print g
-print(psolB_generalized(g, [], []))
+print(psolB_generalized_inline(g, [], []))
+print("===============================================================================")
+print(psolB_generalized_inline_odd(g, [], []))
 """
