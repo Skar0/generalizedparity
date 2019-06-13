@@ -1,3 +1,4 @@
+import sys
 import copy
 import signal
 import pickle
@@ -55,6 +56,7 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n,
 
     # Games generated are size 5 to n using the specified step
     for i in range(0, n, step):
+        sys.stdout.flush()
 
         # if check_solution, we will verify the solutions are the same across the different algorithms
         if check_solution:
@@ -225,6 +227,7 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
 
     # Games generated are size 5 to n using the specified step
     for i in range(1, n + 1, step):
+        sys.stdout.flush()
 
         # if check_solution, we will verify the solutions are the same across the different algorithms
         if check_solution:
@@ -327,6 +330,7 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
     chrono = timer.Timer(verbose=False)  # Timer object
 
     for i in range(0, n, step):
+        sys.stdout.flush()
 
         # if check_solution, we will verify the solutions are the same across the different algorithms
         if control_algorithm:
