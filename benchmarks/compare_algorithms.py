@@ -14,8 +14,12 @@ def set_timeout(t):
     TIMEOUT = t
 
 
+class TimeoutException(Exception):
+    pass
+
+
 def handler(signum, frame):
-    raise Exception("Timeout!")
+    raise TimeoutException("Timeout!")
 
 
 def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n,
@@ -79,7 +83,7 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n,
                     signal.alarm(TIMEOUT)
                     try:
                         W1, W2 = algorithms[k](g_copy)  # solver call
-                    except Exception:
+                    except TimeoutException:
                         # failed = True
                         print("Algorithm " + str(k) +
                               " just timed out, benchmark " + str(i))
@@ -245,7 +249,7 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
                     signal.alarm(TIMEOUT)
                     try:
                         W1, W2 = algorithms[k](g_copy)  # solver call
-                    except Exception:
+                    except TimeoutException:
                         print("Algorithm " + str(k) + " just timed out")
                         W1, W2 = [], []  # probably a timeout
                     finally:
@@ -353,7 +357,7 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
                     signal.alarm(TIMEOUT)
                     try:
                         rest, W1, W2 = algorithms[k](g_copy, [], [])  # solver call
-                    except Exception:
+                    except TimeoutException:
                         print("Algorithm " + str(k) + " just timed out")
                         rest, W1, W2 = g, [], []  # probably a timeout
                     finally:
@@ -390,7 +394,7 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
                     '''
                     assert (set(winning_player_2[u]).issubset(expected_2))
                     assert (set(winning_player_1[u]).issubset(expected_1))
-            except Exception:
+            except TimeoutException:
                 print("The control algorithm timed out")
             finally:
                 signal.alarm(0)
