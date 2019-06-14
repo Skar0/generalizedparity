@@ -164,6 +164,7 @@ def abo_examples(i):
     g = file_handler.load_from_file(
         os.path.join("hardexamples", abo_sample_files[i]))
     g.name = abo_sample_files[i]
+    print("Experiments with " + g.name)
     return g
 
 
