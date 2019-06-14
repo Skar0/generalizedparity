@@ -155,17 +155,20 @@ def partial():
                                pkl_path="allgen_data.pkl")
 
 
+abo_sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.pg"),
+                          os.listdir("./hardexamples"))
+num_abo_examples = len(abo_sample_files)
+
+
+def abo_examples(i):
+    g = file_handler.load_from_file(
+        os.path.join("hardexamples", abo_sample_files[i]))
+    g.name = abo_sample_files[i]
+    return g
+
+
 def fatal_abo():
     set_timeout(1200)
-    abo_sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.pg"),
-                              os.listdir("./hardexamples"))
-    num_abo_examples = len(abo_sample_files)
-
-    def abo_examples(i):
-        g = file_handler.load_from_file(
-            os.path.join("hardexamples", abo_sample_files[i]))
-        g.name = abo_sample_files[i]
-        return g
 
     labels = ["psolB", "psolQ", "psolC"]
     algorithms_partial = [psolB.psolB_set,
@@ -189,6 +192,10 @@ def fatal_abo():
         path_tottime="abo_tottime.pdf",
         # control_algorithm=zielonka.strong_parity_solver_no_strategies,
         pkl_path="abo_part.pkl")
+
+
+def fatal_abo_complete():
+    set_timeout(1200)
 
     algorithms_partial_zielonka =\
         [zielonka.strong_parity_solver_no_strategies,
@@ -228,6 +235,8 @@ if __name__ == "__main__":
         partial()
     elif sys.argv[1] == "fatal-abo":
         fatal_abo()
+    elif sys.argv[1] == "fatal-abo-complete":
+        fatal_abo_complete()
     else:
         assert(False)
     print("Experiments done!")
