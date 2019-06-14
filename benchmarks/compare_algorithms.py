@@ -356,7 +356,7 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
 
             # #iterations calls to the solver are timed
             for j in range(iterations):
-                g_copy = copy.deepcopy(g)  # TODO is this required
+                # g_copy = copy.deepcopy(g)  # TODO is this required
                 with chrono:
                     signal.signal(signal.SIGALRM, handler)
                     signal.alarm(TIMEOUT)
