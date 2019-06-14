@@ -223,9 +223,8 @@ def fatal_abo_complete():
         labels=labels_partial_zielonka,
         pkl_path="abo_ziel.pkl")
 
-def specific_example():
 
-    set_timeout(30)
+def specific_example():
     specific_file_name = "./examples/ltl2dba_theta.tlsf.pg"
 
     def specific_generator(i):
@@ -242,9 +241,9 @@ def specific_example():
          zielonka.zielonka_with_psolC]
 
     labels_partial_zielonka_specific = ["Zielonka",
-                               "Ziel + psolB",
-                               "Ziel + psolQ",
-                               "Ziel + psolC"]
+                                        "Ziel + psolB",
+                                        "Ziel + psolQ",
+                                        "Ziel + psolC"]
 
     compare_complete_algorithms_LTLbenchmarks(
         algorithms_partial_zielonka_specific,
@@ -265,14 +264,14 @@ def specific_example():
 
     labels_partial_specific = ["psolB", "psolQ", "psolC"]
     algorithms_partial_specific = [psolB.psolB_set,
-                          psolQ.psolQ,
-                          psolC.psolC]
+                                   psolQ.psolQ,
+                                   psolC.psolC]
 
     compare_partial_algorithms(
         algorithms_partial_specific,
         specific_generator,
         1,
-        preprocess=[None]*len(labels_partial_specific),
+        preprocess=[None] * len(labels_partial_specific),
         iterations=4,
         step=1,
         labels=labels_partial_specific,
@@ -283,6 +282,7 @@ def specific_example():
         path_tottime="all_tottime.pdf",
         # control_algorithm=zielonka.strong_parity_solver_no_strategies,
         pkl_path="all_data.pkl")
+
 
 if __name__ == "__main__":
     assert(len(sys.argv) == 2)
