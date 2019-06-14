@@ -223,6 +223,66 @@ def fatal_abo_complete():
         labels=labels_partial_zielonka,
         pkl_path="abo_ziel.pkl")
 
+def specific_example():
+
+    set_timeout(30)
+    specific_file_name = "./examples/ltl2dba_theta.tlsf.pg"
+
+    def specific_generator(i):
+        game = file_handler.load_from_file(specific_file_name)
+        game.name = specific_file_name[10:]
+        return game
+
+    # first, the complete algorithms for one dimension
+
+    algorithms_partial_zielonka_specific =\
+        [zielonka.strong_parity_solver_no_strategies,
+         zielonka.zielonka_with_psolB,
+         zielonka.zielonka_with_psolQ,
+         zielonka.zielonka_with_psolC]
+
+    labels_partial_zielonka_specific = ["Zielonka",
+                               "Ziel + psolB",
+                               "Ziel + psolQ",
+                               "Ziel + psolC"]
+
+    compare_complete_algorithms_LTLbenchmarks(
+        algorithms_partial_zielonka_specific,
+        specific_generator,
+        1,
+        preprocess=[None] * len(labels_partial_zielonka_specific),
+        iterations=4,
+        step=1,
+        check_solution=False,
+        plot=True,
+        path="all_ziel.pdf",
+        path_tot="all_ziel_cumulative.pdf",
+        title="Comparison of Zielonka + partial solver on LTL benchmarks",
+        pkl_path="ziel_combo.pkl",
+        labels=labels_partial_zielonka_specific)
+
+    # then only the partials for one dimension
+
+    labels_partial_specific = ["psolB", "psolQ", "psolC"]
+    algorithms_partial_specific = [psolB.psolB_set,
+                          psolQ.psolQ,
+                          psolC.psolC]
+
+    compare_partial_algorithms(
+        algorithms_partial_specific,
+        specific_generator,
+        1,
+        preprocess=[None]*len(labels_partial_specific),
+        iterations=4,
+        step=1,
+        labels=labels_partial_specific,
+        plot=True,
+        path_time="all_time.pdf",
+        path_proportion="all_prop.pdf",
+        path_bulkprop="all_bulkprop.pdf",
+        path_tottime="all_tottime.pdf",
+        # control_algorithm=zielonka.strong_parity_solver_no_strategies,
+        pkl_path="all_data.pkl")
 
 if __name__ == "__main__":
     assert(len(sys.argv) == 2)
@@ -237,6 +297,8 @@ if __name__ == "__main__":
         fatal_abo()
     elif sys.argv[1] == "fatal-abo-complete":
         fatal_abo_complete()
+    elif sys.argv[1] == "specific-ex":
+        specific_example()
     else:
         assert(False)
     print("Experiments done!")
