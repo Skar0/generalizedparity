@@ -81,9 +81,9 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n,
             # #iterations calls to the solver are timed
             for j in range(iterations):
                 # failed = False
+                signal.signal(signal.SIGALRM, handler)
+                signal.alarm(TIMEOUT)
                 with chrono:
-                    signal.signal(signal.SIGALRM, handler)
-                    signal.alarm(TIMEOUT)
                     try:
                         W1, W2 = algorithms[k](g_copy)  # solver call
                     except TimeoutException:
@@ -91,8 +91,7 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n,
                         print("Algorithm " + str(k) +
                               " just timed out, benchmark " + str(i))
                         W1, W2 = [], []  # probably a timeout
-                    finally:
-                        signal.alarm(0)
+                signal.alarm(0)
 
                 # if not failed:
                 recordings[k][j] = chrono.interval
@@ -248,16 +247,15 @@ def compare_complete_algorithms(algorithms, generator, n, preprocess=None, itera
 
             # #iterations calls to the solver are timed
             for j in range(iterations):
+                signal.signal(signal.SIGALRM, handler)
+                signal.alarm(TIMEOUT)
                 with chrono:
-                    signal.signal(signal.SIGALRM, handler)
-                    signal.alarm(TIMEOUT)
                     try:
                         W1, W2 = algorithms[k](g_copy)  # solver call
                     except TimeoutException:
                         print("Algorithm " + str(k) + " just timed out")
                         W1, W2 = [], []  # probably a timeout
-                    finally:
-                        signal.alarm(0)
+                signal.alarm(0)
 
                 recordings[k][j] = chrono.interval
 
@@ -357,16 +355,15 @@ def compare_partial_algorithms(algorithms, generator, n, preprocess=None,
             # #iterations calls to the solver are timed
             for j in range(iterations):
                 # g_copy = copy.deepcopy(g)  # TODO is this required
+                signal.signal(signal.SIGALRM, handler)
+                signal.alarm(TIMEOUT)
                 with chrono:
-                    signal.signal(signal.SIGALRM, handler)
-                    signal.alarm(TIMEOUT)
                     try:
                         rest, W1, W2 = algorithms[k](g_copy, [], [])  # solver call
                     except TimeoutException:
                         print("Algorithm " + str(k) + " just timed out")
                         rest, W1, W2 = g, [], []  # probably a timeout
-                    finally:
-                        signal.alarm(0)
+                signal.alarm(0)
 
                 recordings[k][j] = chrono.interval
 
