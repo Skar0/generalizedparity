@@ -78,6 +78,8 @@ def complete():
         pkl_path="ziel_combo.pkl",
         labels=labels_partial_zielonka)
 
+
+def complete_gen():
     algorithms_partial_genzielonka =\
         [gpg.generalized_parity_solver,
          genpartial.generalized_with_psolB,
@@ -220,9 +222,12 @@ if __name__ == "__main__":
     sys.setrecursionlimit(100000)
     if sys.argv[1] == "complete":
         complete()
+    if sys.argv[1] == "complete-gen":
+        complete_gen()
     elif sys.argv[1] == "partial":
         partial()
     elif sys.argv[1] == "fatal-abo":
         fatal_abo()
     else:
         assert(False)
+    print("Experiments done!")

@@ -95,7 +95,7 @@ def compare_complete_algorithms_LTLbenchmarks(algorithms, generator, n,
                         signal.alarm(0)
 
                 # if not failed:
-                    # recordings[k][j] = chrono.interval
+                recordings[k][j] = chrono.interval
 
             # if min(recordings[k]) == 0:
             #     y[k].append(TIMEOUT)  # get the minimum out of #iterations recordings
