@@ -226,7 +226,7 @@ def fatal_abo_complete():
 
 
 def specific_example():
-    specific_file_name = "./examples/ltl2dba_theta.tlsf.pg"
+    specific_file_name = "./examples/ltl2dba_E_10.tlsf.pg"
 
     def specific_generator(i):
         game = file_handler.load_from_file(specific_file_name)
