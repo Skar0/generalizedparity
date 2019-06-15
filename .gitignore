@@ -4,3 +4,4 @@
 *.pkl
 *.csv
 *.dat
+.DS_Store
