@@ -231,8 +231,8 @@ def specific_example_gen():
                            "./examples/load_balancer_2.tlsf.gpg"]
 
     def specific_generator(i):
-        game = file_handler.load_from_file(specific_file_names[i])
-        game.name = specific_file_names[11:]
+        game = file_handler.load_generalized_from_file(specific_file_names[i])
+        game.name = specific_file_names[i][11:]
         return game
 
     labels = ["psolB", "psolQ", "psolC"]
