@@ -169,7 +169,7 @@ def abo_examples(i):
 
 
 def fatal_abo():
-    set_timeout(1200)
+    set_timeout(1500)
 
     labels = ["psolB", "psolQ", "psolC"]
     algorithms_partial = [psolB.psolB_set,
@@ -183,7 +183,7 @@ def fatal_abo():
         abo_examples,
         num_abo_examples,
         preprocess=[None, None, None, None, None],
-        iterations=2,
+        iterations=1,
         step=1,
         labels=labels,
         plot=True,
@@ -196,7 +196,7 @@ def fatal_abo():
 
 
 def fatal_abo_complete():
-    set_timeout(1200)
+    set_timeout(1500)
 
     algorithms_partial_zielonka =\
         [zielonka.strong_parity_solver_no_strategies,
@@ -214,7 +214,7 @@ def fatal_abo_complete():
         abo_examples,
         num_abo_examples,
         preprocess=[None] * len(labels_partial_zielonka),
-        iterations=2,
+        iterations=1,
         step=1,
         check_solution=False,
         plot=True,
