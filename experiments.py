@@ -225,7 +225,65 @@ def fatal_abo_complete():
         pkl_path="abo_ziel.pkl")
 
 
+def specific_example_gen():
+    set_timeout(120)
+    specific_file_names = ["./examples/amba_decomposed_tincr.tlsf.gpg",
+                           "./examples/load_balancer_2.tlsf.gpg"]
+
+    def specific_generator(i):
+        game = file_handler.load_from_file(specific_file_names[i])
+        game.name = specific_file_names[11:]
+        return game
+
+    labels = ["psolB", "psolQ", "psolC"]
+    algorithms_general = [psolB_generalized.psolB_generalized_inline,
+                          psolQ_generalized.psolQ_generalized,
+                          psolC_generalized.psolC_generalized]
+
+    compare_partial_algorithms(algorithms_general,
+                               specific_generator,
+                               2,
+                               preprocess=[None, None, None, None, None],
+                               iterations=4,
+                               step=1,
+                               labels=labels,
+                               plot=True,
+                               path_time="allgen_time.pdf",
+                               path_proportion="allgen_prop.pdf",
+                               path_bulkprop="allgen_bulkprop.pdf",
+                               path_tottime="allgen_tottime.pdf",
+                               # control_algorithm=gpg.generalized_parity_solver,
+                               pkl_path="allgen_data.pkl")
+
+    algorithms_partial_genzielonka =\
+        [gpg.generalized_parity_solver,
+         genpartial.generalized_with_psolB,
+         genpartial.generalized_zielonka_with_psolQ,
+         genpartial.generalized_zielonka_with_psolC]
+
+    labels_partial_genzielonka = ["Gen Zielonka",
+                                  "Gen Ziel + Gen psolB",
+                                  "Gen Ziel + Gen psolQ",
+                                  "Gen Ziel + Gen psolC"]
+
+    compare_complete_algorithms_LTLbenchmarks(
+        algorithms_partial_genzielonka,
+        specific_generator,
+        2,
+        preprocess=[None] * len(labels_partial_genzielonka),
+        iterations=4,
+        step=1,
+        check_solution=False,
+        plot=True,
+        path="genziel+partials-time.pdf",
+        path_tot="genziel+partials-cumulative.pdf",
+        title="Comparison of Gen Zielonka + partial solver on LTL benchmarks",
+        pkl_path="genziel_combo.pkl",
+        labels=labels_partial_genzielonka)
+
+
 def specific_example():
+    set_timeout(120)
     specific_file_name = "./examples/ltl2dba_E_10.tlsf.pg"
 
     def specific_generator(i):
@@ -300,6 +358,8 @@ if __name__ == "__main__":
         fatal_abo_complete()
     elif sys.argv[1] == "specific-ex":
         specific_example()
+    elif sys.argv[1] == "specific-ex-gen":
+        specific_example_gen()
     else:
         assert(False)
     print("Experiments done!")
