@@ -1,5 +1,5 @@
 (c) Clement Tamines @ University of Mons, 2019
-    Guillermo A. Perez @ University of Antwerp, 2019
+(c) Guillermo A. Perez @ University of Antwerp, 2019
 
 These Python modules were coded as a proof-of-concept of the algorithms
 present in a Reachability Problems 2019 submission concerning generalized
