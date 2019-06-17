@@ -37,29 +37,8 @@ def all_examples(i):
     return g
 
 
-# gen_sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.gpg"),
-#                           os.listdir("./examples"))
-gen_sample_files =\
-    ["prioritized_arbiter_4.tlsf.gpg",
-     "full_arbiter_unreal1_3_2.tlsf.gpg",
-     "prioritized_arbiter_unreal3.tlsf.gpg",
-     "prioritized_arbiter_unreal2.tlsf.gpg",
-     "generalized_buffer_unreal1.tlsf.gpg",
-     "detector_unreal_6.tlsf.gpg",
-     "loadfull2.tlsf.gpg",
-     "amba_decomposed_encode_8.tlsf.gpg",
-     "amba_decomposed_lock_6.tlsf.gpg",
-     "prioritized_arbiter_enc_6.tlsf.gpg",
-     "loadcomp2.tlsf.gpg",
-     "generalized_buffer.tlsf.gpg",
-     "prioritized_arbiter_unreal1.tlsf.gpg",
-     "collector_v1_6.tlsf.gpg",
-     "full_arbiter_4.tlsf.gpg",
-     "prioritized_arbiter_enc_4.tlsf.gpg",
-     "genbuf3.tlsf.gpg",
-     "collector_v3_6.tlsf.gpg",
-     "generalized_buffer_unreal2.tlsf.gpg",
-     "generalized_buffer_2.tlsf.gpg"]
+gen_sample_files = filter(lambda f: fnmatch.fnmatch(f, "*.gpg"),
+                          os.listdir("./examples"))
 num_gen_examples = len(gen_sample_files)
 
 
